@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Consolas:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="1.Windows下MySQL的配置以 MySQL 5.1 免安装版为例, 下载 mysql-noinstall-5.1.69-win32.zip ( 官方下载页:http:&#x2F;&#x2F;dev.mysql.com&#x2F;downloads&#x2F;mysql&#x2F;5.1.html#downloads ) 配置步骤:  将下载的 mysql-noinstall-5.1.69-win32.zip 解压至需要安装的位置, 如:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL">
+<meta property="og:url" content="http://yoursite.com/2015/10/19/MySQL/index.html">
+<meta property="og:site_name" content="郁闷的不行">
+<meta property="og:description" content="1.Windows下MySQL的配置以 MySQL 5.1 免安装版为例, 下载 mysql-noinstall-5.1.69-win32.zip ( 官方下载页:http:&#x2F;&#x2F;dev.mysql.com&#x2F;downloads&#x2F;mysql&#x2F;5.1.html#downloads ) 配置步骤:  将下载的 mysql-noinstall-5.1.69-win32.zip 解压至需要安装的位置, 如:">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2015-10-19T02:26:19.000Z">
+<meta property="article:modified_time" content="2021-04-06T03:15:44.369Z">
+<meta property="article:author" content="Loiszad">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2015/10/19/MySQL/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>MySQL | 郁闷的不行</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">郁闷的不行</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">踏歌长行，梦想永在 ~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/10/19/MySQL/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/IMG_0167.JPG">
+      <meta itemprop="name" content="Loiszad">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="郁闷的不行">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MySQL
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2015-10-19 10:26:19" itemprop="dateCreated datePublished" datetime="2015-10-19T10:26:19+08:00">2015-10-19</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="1-Windows下MySQL的配置"><a href="#1-Windows下MySQL的配置" class="headerlink" title="1.Windows下MySQL的配置"></a>1.Windows下MySQL的配置</h2><p>以 MySQL 5.1 免安装版为例, 下载 mysql-noinstall-5.1.69-win32.zip ( 官方下载页:<a target="_blank" rel="noopener" href="http://dev.mysql.com/downloads/mysql/5.1.html#downloads">http://dev.mysql.com/downloads/mysql/5.1.html#downloads</a> )</p>
+<p>配置步骤:</p>
+<ol>
+<li><p>将下载的 mysql-noinstall-5.1.69-win32.zip 解压至需要安装的位置, 如: C:\Program Files;</p>
+</li>
+<li><p>在安装文件夹下找到 my-small.ini 配置文件, 将其重命名为 my.ini , 打开进行编辑, 在 [client] 与 [mysqld] 下均添加一行: default-character-set = gbk</p>
+</li>
+<li><p>打开 Windows 环境变量设置, 新建变量名 MYSQL_HOME , 变量值为 MySQL 安装目录路径, 这里为 C:\Program Files\mysql-5.1.69-win32</p>
+</li>
+<li><p>在 环境变量 的 Path 变量中添加 ;%MYSQL_HOME%\bin;</p>
+</li>
+<li><p>安装 MySQL 服务, 打开Windows命令提示符, 执行命令: mysqld –install MySQL –defaults-file=”my.ini” 提示”Service successfully installed.”表示成功;</p>
+</li>
+</ol>
+<span id="more"></span>
+
+<p>MySQL服务的启动、停止与卸载</p>
+<p>在 Windows 命令提示符下运行:</p>
+<p>启动: net start MySQL</p>
+<p>停止: net stop MySQL</p>
+<p>卸载: sc delete MySQL</p>
+<h2 id="2-SQL语句"><a href="#2-SQL语句" class="headerlink" title="2.SQL语句"></a>2.SQL语句</h2><h3 id="1-登陆：-mysql-h-主机名-u-用户名-p-密码"><a href="#1-登陆：-mysql-h-主机名-u-用户名-p-密码" class="headerlink" title="1.登陆：  mysql -h 主机名 -u 用户名 -p 密码;"></a>1.登陆：  mysql -h 主机名 -u 用户名 -p 密码;</h3><h3 id="2-创建数据库：-create-database-数据库名-其他选项"><a href="#2-创建数据库：-create-database-数据库名-其他选项" class="headerlink" title="2.创建数据库： create database 数据库名 [其他选项];"></a>2.创建数据库： create database 数据库名 [其他选项];</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">例：create database db_test character set gbk;</span><br></pre></td></tr></table></figure>
+<h3 id="3-查看数据库：show-databases"><a href="#3-查看数据库：show-databases" class="headerlink" title="3.查看数据库：show databases;"></a>3.查看数据库：show databases;</h3><h3 id="4-使用数据库：-use-数据库名"><a href="#4-使用数据库：-use-数据库名" class="headerlink" title="4.使用数据库： use 数据库名;"></a>4.使用数据库： use 数据库名;</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">例：use db_test;</span><br></pre></td></tr></table></figure>
+<h3 id="5-创建数据库表：create-table-表名称-列声明"><a href="#5-创建数据库表：create-table-表名称-列声明" class="headerlink" title="5.创建数据库表：create table 表名称(列声明);"></a>5.创建数据库表：create table 表名称(列声明);</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">create table students</span><br><span class="line">	（</span><br><span class="line">		id int unsigned not null auto_increment primary key,</span><br><span class="line">		name char(8) not null,</span><br><span class="line">		sex char(4) not null,</span><br><span class="line">		age tinyint unsigned not null,</span><br><span class="line">		tel char(13) null default &quot;-&quot;</span><br><span class="line">	);</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-查看数据库有哪些表：show-tables"><a href="#6-查看数据库有哪些表：show-tables" class="headerlink" title="6.查看数据库有哪些表：show tables;"></a>6.查看数据库有哪些表：show tables;</h3><h3 id="7-插入一条数据：insert-into-表名-列名1-列名2-列名3-…-values-值1-值2-值3-…"><a href="#7-插入一条数据：insert-into-表名-列名1-列名2-列名3-…-values-值1-值2-值3-…" class="headerlink" title="7.插入一条数据：insert into 表名 [(列名1, 列名2, 列名3, …)] values (值1, 值2, 值3, …);"></a>7.插入一条数据：insert into 表名 [(列名1, 列名2, 列名3, …)] values (值1, 值2, 值3, …);</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">例： insert into students values(NULL, &quot;王刚&quot;, &quot;男&quot;, 20, &quot;13811371377&quot;);</span><br><span class="line">     insert into students (name, sex, age) values(&quot;孙丽华&quot;, &quot;女&quot;, 21);</span><br></pre></td></tr></table></figure>
+<h3 id="8-查询数据：select-列名称-from-表名称-查询条件"><a href="#8-查询数据：select-列名称-from-表名称-查询条件" class="headerlink" title="8.查询数据：select 列名称 from 表名称 [查询条件];"></a>8.查询数据：select 列名称 from 表名称 [查询条件];</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">例：select name, age from students;  </span><br><span class="line">    select * from students where sex&#x3D;&quot;女&quot;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="9-修改数据：update-表名称-set-列名称-新值-where-更新条件"><a href="#9-修改数据：update-表名称-set-列名称-新值-where-更新条件" class="headerlink" title="9.修改数据：update 表名称 set 列名称=新值 where 更新条件;"></a>9.修改数据：update 表名称 set 列名称=新值 where 更新条件;</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">将id为5的手机号改为默认的&quot;-&quot;: update students set tel&#x3D;default where id&#x3D;5;</span><br><span class="line"></span><br><span class="line">将所有人的年龄增加1: update students set age&#x3D;age+1;</span><br><span class="line"></span><br><span class="line">将手机号为 13288097888 的姓名改为 &quot;张伟鹏&quot;, 年龄改为 19: update students set name&#x3D;&quot;张伟鹏&quot;, age&#x3D;19 where tel&#x3D;&quot;13288097888&quot;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="10-删除数据：delete-from-表名称-where-删除条件"><a href="#10-删除数据：delete-from-表名称-where-删除条件" class="headerlink" title="10.删除数据：delete from 表名称 where 删除条件;"></a>10.删除数据：delete from 表名称 where 删除条件;</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">例:</span><br><span class="line"></span><br><span class="line">删除id为2的行: delete from students where id&#x3D;2;</span><br><span class="line"></span><br><span class="line">删除所有年龄小于21岁的数据: delete from students where age&lt;20;</span><br><span class="line"></span><br><span class="line">删除表中的所有数据: delete from students;</span><br></pre></td></tr></table></figure>
+
+<h3 id="11-修改表"><a href="#11-修改表" class="headerlink" title="11.修改表"></a>11.修改表</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">添加列</span><br><span class="line">  </span><br><span class="line">基本形式: alter table 表名 add 列名 列数据类型 [after 插入位置];</span><br><span class="line">  </span><br><span class="line">示例:</span><br><span class="line">  </span><br><span class="line">在表的最后追加列 address: alter table students add address char(60);</span><br><span class="line">  </span><br><span class="line">在名为 age 的列后插入列 birthday: alter table students add birthday date after age;</span><br><span class="line">  </span><br><span class="line">修改列</span><br><span class="line">  </span><br><span class="line">基本形式: alter table 表名 change 列名称 列新名称 新数据类型;</span><br><span class="line">  </span><br><span class="line">示例:</span><br><span class="line">  </span><br><span class="line">将表 tel 列改名为 telphone: alter table students change tel telphone char(13) default &quot;-&quot;;</span><br><span class="line">  </span><br><span class="line">将 name 列的数据类型改为 char(16): alter table students change name name char(16) not null;</span><br><span class="line">  </span><br><span class="line">删除列</span><br><span class="line">  </span><br><span class="line">基本形式: alter table 表名 drop 列名称;</span><br><span class="line">  </span><br><span class="line">示例:</span><br><span class="line">  </span><br><span class="line">删除 birthday 列: alter table students drop birthday;</span><br><span class="line">  </span><br><span class="line">重命名表</span><br><span class="line">  </span><br><span class="line">基本形式: alter table 表名 rename 新表名;</span><br><span class="line">  </span><br><span class="line">示例:</span><br><span class="line">  </span><br><span class="line">重命名 students 表为 workmates: alter table students rename workmates;</span><br><span class="line">  </span><br><span class="line">删除整张表</span><br><span class="line">  </span><br><span class="line">基本形式: drop table 表名;</span><br><span class="line">  </span><br><span class="line">示例: 删除 workmates 表: drop table workmates;</span><br><span class="line">  </span><br><span class="line">删除整个数据库</span><br><span class="line">  </span><br><span class="line">基本形式: drop database 数据库名;</span><br><span class="line">  </span><br><span class="line">示例: 删除 samp_db 数据库: drop database samp_db;</span><br></pre></td></tr></table></figure>
+
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/MySQL/" rel="tag"># MySQL</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2015/08/11/%E7%90%86%E8%A7%A3WebView-%E4%B8%80/" rel="prev" title="WebView">
+      <i class="fa fa-chevron-left"></i> WebView
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2015/12/29/Git%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="next" title="Git的使用">
+      Git的使用 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Windows%E4%B8%8BMySQL%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="nav-text">1.Windows下MySQL的配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-SQL%E8%AF%AD%E5%8F%A5"><span class="nav-text">2.SQL语句</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%99%BB%E9%99%86%EF%BC%9A-mysql-h-%E4%B8%BB%E6%9C%BA%E5%90%8D-u-%E7%94%A8%E6%88%B7%E5%90%8D-p-%E5%AF%86%E7%A0%81"><span class="nav-text">1.登陆：  mysql -h 主机名 -u 用户名 -p 密码;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A-create-database-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%90%8D-%E5%85%B6%E4%BB%96%E9%80%89%E9%A1%B9"><span class="nav-text">2.创建数据库： create database 数据库名 [其他选项];</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%9F%A5%E7%9C%8B%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9Ashow-databases"><span class="nav-text">3.查看数据库：show databases;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E4%BD%BF%E7%94%A8%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A-use-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%90%8D"><span class="nav-text">4.使用数据库： use 数据库名;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A1%A8%EF%BC%9Acreate-table-%E8%A1%A8%E5%90%8D%E7%A7%B0-%E5%88%97%E5%A3%B0%E6%98%8E"><span class="nav-text">5.创建数据库表：create table 表名称(列声明);</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E6%9F%A5%E7%9C%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9C%89%E5%93%AA%E4%BA%9B%E8%A1%A8%EF%BC%9Ashow-tables"><span class="nav-text">6.查看数据库有哪些表：show tables;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E6%8F%92%E5%85%A5%E4%B8%80%E6%9D%A1%E6%95%B0%E6%8D%AE%EF%BC%9Ainsert-into-%E8%A1%A8%E5%90%8D-%E5%88%97%E5%90%8D1-%E5%88%97%E5%90%8D2-%E5%88%97%E5%90%8D3-%E2%80%A6-values-%E5%80%BC1-%E5%80%BC2-%E5%80%BC3-%E2%80%A6"><span class="nav-text">7.插入一条数据：insert into 表名 [(列名1, 列名2, 列名3, …)] values (值1, 值2, 值3, …);</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-%E6%9F%A5%E8%AF%A2%E6%95%B0%E6%8D%AE%EF%BC%9Aselect-%E5%88%97%E5%90%8D%E7%A7%B0-from-%E8%A1%A8%E5%90%8D%E7%A7%B0-%E6%9F%A5%E8%AF%A2%E6%9D%A1%E4%BB%B6"><span class="nav-text">8.查询数据：select 列名称 from 表名称 [查询条件];</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-%E4%BF%AE%E6%94%B9%E6%95%B0%E6%8D%AE%EF%BC%9Aupdate-%E8%A1%A8%E5%90%8D%E7%A7%B0-set-%E5%88%97%E5%90%8D%E7%A7%B0-%E6%96%B0%E5%80%BC-where-%E6%9B%B4%E6%96%B0%E6%9D%A1%E4%BB%B6"><span class="nav-text">9.修改数据：update 表名称 set 列名称&#x3D;新值 where 更新条件;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-%E5%88%A0%E9%99%A4%E6%95%B0%E6%8D%AE%EF%BC%9Adelete-from-%E8%A1%A8%E5%90%8D%E7%A7%B0-where-%E5%88%A0%E9%99%A4%E6%9D%A1%E4%BB%B6"><span class="nav-text">10.删除数据：delete from 表名称 where 删除条件;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-%E4%BF%AE%E6%94%B9%E8%A1%A8"><span class="nav-text">11.修改表</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Loiszad"
+      src="/images/IMG_0167.JPG">
+  <p class="site-author-name" itemprop="name">Loiszad</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2013 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Loiszad</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

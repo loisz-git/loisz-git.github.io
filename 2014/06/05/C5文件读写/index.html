@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Consolas:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="1.fopen()12345678910111213141516171819202122232425262728293031　　fopen的原型是：FILE *fopen(const char *filename,const char *mode)，fopen实现三个功能：为使用而打开一个流，把一个文件和此流相连接，给此流返回一个FILR指针。 　　参数filename指向要打开的文件名，mode">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C5文件读写">
+<meta property="og:url" content="http://yoursite.com/2014/06/05/C5%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99/index.html">
+<meta property="og:site_name" content="郁闷的不行">
+<meta property="og:description" content="1.fopen()12345678910111213141516171819202122232425262728293031　　fopen的原型是：FILE *fopen(const char *filename,const char *mode)，fopen实现三个功能：为使用而打开一个流，把一个文件和此流相连接，给此流返回一个FILR指针。 　　参数filename指向要打开的文件名，mode">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2014-06-05T02:51:59.000Z">
+<meta property="article:modified_time" content="2021-04-06T03:15:01.598Z">
+<meta property="article:author" content="Loiszad">
+<meta property="article:tag" content="C">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2014/06/05/C5%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>C5文件读写 | 郁闷的不行</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">郁闷的不行</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">踏歌长行，梦想永在 ~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2014/06/05/C5%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/IMG_0167.JPG">
+      <meta itemprop="name" content="Loiszad">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="郁闷的不行">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          C5文件读写
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2014-06-05 10:51:59" itemprop="dateCreated datePublished" datetime="2014-06-05T10:51:59+08:00">2014-06-05</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="1-fopen"><a href="#1-fopen" class="headerlink" title="1.fopen()"></a>1.fopen()</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">　　fopen的原型是：FILE *fopen(const char *filename,const char *mode)，fopen实现三个功能：为使用而打开一个流，</span><br><span class="line">把一个文件和此流相连接，给此流返回一个FILR指针。</span><br><span class="line"> </span><br><span class="line">　　参数filename指向要打开的文件名，mode表示打开状态的字符串，其取值如下： </span><br><span class="line"> </span><br><span class="line">　　字符串 含义 </span><br><span class="line"> </span><br><span class="line">　　&quot;r&quot; 以只读方式打开文件 </span><br><span class="line">　　&quot;w&quot; 以只写方式打开文件 </span><br><span class="line">　　&quot;a&quot; 以追加方式打开文件 </span><br><span class="line">　　&quot;r+&quot; 以读&#x2F;写方式打开文件，如无文件出错 </span><br><span class="line">　　&quot;w+&quot; 以读&#x2F;写方式打开文件，如无文件生成新文件 </span><br><span class="line"> </span><br><span class="line">　　一个文件可以以文本模式或二进制模式打开，这两种的区别是：在文本模式中回车被当成一个字符’&#x2F;n’，</span><br><span class="line">而二进制模式认为它是两个字符0x0D,0x0A;如果在文件中读到0x1B，文本模式会认为这是文件结束符，</span><br><span class="line">也就是二进制模型不会对文件进行处理，而文本方式会按一定的方式对数据作相应的转换。 </span><br><span class="line"> </span><br><span class="line">　　系统默认的是以文本模式打开，可以修改全部变量_fmode的值来修改这个设置，例如_fmode&#x3D;O_TEXT;</span><br><span class="line">就设置默认打开方式为文本模式;而_fmode&#x3D;O_BINARY;则设置默认打开方式是二进制模式。 </span><br><span class="line"> </span><br><span class="line">　　我们也可以在模式字符串中指定打开的模式，如&quot;rb&quot;表示以二进制模式打开只读文件，&quot;w+t&quot;或&quot;wt+&quot;表示以文本模式打开读&#x2F;写文件。 </span><br><span class="line"> </span><br><span class="line">　　此函数返回一个FILE指针，所以申明一个FILE指针后不用初始化，而是用fopen()来返回一个指针并与一个特定的文件相连，</span><br><span class="line"> 如果成败，返回NULL.</span><br><span class="line">　　例: </span><br><span class="line">　　 以下是引用片段： </span><br><span class="line"> FILE *fp; </span><br><span class="line">　　if(fp&#x3D;fopen(&quot;123.456&quot;,&quot;wb&quot;)) </span><br><span class="line">　　 puts(&quot;打开文件成功&quot;); </span><br><span class="line">　　 else </span><br><span class="line">　　 puts(&quot;打开文件成败&quot;);</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+<h2 id="2-fclose"><a href="#2-fclose" class="headerlink" title="2.fclose()"></a>2.fclose()</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">　　fclose()的功能就是关闭用fopen()打开的文件，其原型是：int fclose(FILE *fp);如果成功，返回0,失败返回EOF。 </span><br><span class="line">　　在程序结束时一定要记得关闭打开的文件，不然可能会造成数据丢失的情况，我以前就经常犯这样的错误。</span><br><span class="line">　　例：fclose(fp); </span><br></pre></td></tr></table></figure>
+<h2 id="3-fputc"><a href="#3-fputc" class="headerlink" title="3.fputc()"></a>3.fputc()</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">　　向流写一个字符，原型是int fputc(int c, FILE *stream); 成功返回这个字符,失败返回EOF。 </span><br><span class="line">　　例：fputc(’X’,fp); </span><br></pre></td></tr></table></figure>
+<h2 id="4-fgetc"><a href="#4-fgetc" class="headerlink" title="4.fgetc()"></a>4.fgetc()</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">　　从流中读一个字符，原型是int fputc(FILE *stream); 成功返回这个字符,失败返回EOF。 </span><br><span class="line">　　例：char ch1&#x3D;fgetc(fp); </span><br></pre></td></tr></table></figure>
+<h2 id="5-fseek"><a href="#5-fseek" class="headerlink" title="5. fseek()"></a>5. fseek()</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">　　此函数一般用于二进制模式打开的文件中，功能是定位到流中指定的位置，</span><br><span class="line">原型是int fseek(FILE *stream, long offset, int whence);如果成功返回0，</span><br><span class="line">参数offset是移动的字符数，whence是移动的基准，取值是： </span><br><span class="line">　　符号常量 值 基准位置 </span><br><span class="line">　　SEEK_SET 0 文件开头 </span><br><span class="line">　　SEEK_CUR 1 当前读写的位置 </span><br><span class="line">　　SEEK_END 2 文件尾部 </span><br><span class="line">　　例：fseek(fp,1234L,SEEK_CUR);&#x2F;&#x2F;把读写位置从当前位置向后移动1234字节(L后缀表示长整数) </span><br><span class="line">　　fseek(fp,0L,2);&#x2F;&#x2F;把读写位置移动到文件尾</span><br></pre></td></tr></table></figure>
+<h2 id="6-fputs"><a href="#6-fputs" class="headerlink" title="6.fputs()"></a>6.fputs()</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">　　写一个字符串到流中，原型int fputs(const char *s, FILE *stream); </span><br><span class="line">　　例：fputs(&quot;I Love You&quot;,fp); </span><br></pre></td></tr></table></figure>
+<h2 id="7-fgets"><a href="#7-fgets" class="headerlink" title="7.fgets()"></a>7.fgets()</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">　　从流中读一行或指定个字符，原型是char *fgets(char *s, int n, FILE *stream); 从流中读取n-1个字符，</span><br><span class="line">除非读完一行，参数s是来接收字符串，如果成功则返回s的指针，否则返回NULL。 </span><br><span class="line">　　例：如果一个文件的当前位置的文本如下： </span><br><span class="line">　　Love ,I Have </span><br><span class="line">　　But …….. </span><br><span class="line">　　如果用 </span><br><span class="line">　　fgets(str1,4,file1); </span><br><span class="line">　　则执行后str1&#x3D;&quot;Lov&quot;，读取了4-1&#x3D;3个字符，而如果用 </span><br><span class="line">　　fgets(str1,23,file1); </span><br><span class="line">　　则执行str&#x3D;&quot;Love ,I Have&quot;，读取了一行(不包括行尾的’&#x2F;n’)。 </span><br></pre></td></tr></table></figure>
+<h2 id="8-fprintf"><a href="#8-fprintf" class="headerlink" title="8.fprintf()"></a>8.fprintf()</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">　　按格式输入到流，其原型是int fprintf(FILE *stream, const char *format[, argument, …]);</span><br><span class="line">其用法和printf()相同，不过不是写到控制台，而是写到流罢了。 </span><br><span class="line">　　例：fprintf(fp,&quot;%2d%s&quot;,4,&quot;Hahaha&quot;); </span><br></pre></td></tr></table></figure>
+<h2 id="9-fscanf"><a href="#9-fscanf" class="headerlink" title="9.fscanf()"></a>9.fscanf()</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">　　从流中按格式读取，其原型是int fscanf(FILE *stream, const char *format[, address, …]);</span><br><span class="line">其用法和scanf()相同，不过不是从控制台读取，而是从流读取罢了。 </span><br><span class="line">　　例：fscanf(fp,&quot;%d%d&quot; ,&amp;x,&amp;y); </span><br></pre></td></tr></table></figure>
+<h2 id="10-feof"><a href="#10-feof" class="headerlink" title="10.feof()"></a>10.feof()</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">　　检测是否已到文件尾，是返回真，否则返回0，其原型是int feof(FILE *stream); </span><br><span class="line">　　例：if(feof(fp))printf(&quot;已到文件尾&quot;); </span><br></pre></td></tr></table></figure>
+<h2 id="11-ferror"><a href="#11-ferror" class="headerlink" title="11.ferror()"></a>11.ferror()</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">　　原型是int ferror(FILE *stream);返回流最近的错误代码，可用clearerr()来清除它，</span><br><span class="line">clearerr()的原型是void clearerr(FILE *stream); </span><br><span class="line">　　例：printf(&quot;%d&quot;,ferror(fp)); </span><br></pre></td></tr></table></figure>
+<h2 id="12-rewind"><a href="#12-rewind" class="headerlink" title="12.rewind()"></a>12.rewind()</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">　　把当前的读写位置回到文件开始，原型是void rewind(FILE *stream);其实本函数相当于fseek(fp,0L,SEEK_SET); </span><br><span class="line">　　例：rewind(fp); </span><br></pre></td></tr></table></figure>
+<h2 id="13-remove"><a href="#13-remove" class="headerlink" title="13.remove()"></a>13.remove()</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">　　删除文件，原型是int remove(const char *filename); 参数就是要删除的文件名，成功返回0。 </span><br><span class="line">　　例：remove(&quot;c:&#x2F;&#x2F;io.sys&quot;); </span><br></pre></td></tr></table></figure>
+<h2 id="14-fread"><a href="#14-fread" class="headerlink" title="14.fread()"></a>14.fread()</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">　　从流中读指定个数的字符，原型是size_t fread(void *ptr, size_t size, size_t n, FILE *stream);</span><br><span class="line">   参数ptr是保存读取的数据，void*的指针可用任何类型的指针来替换，如char*、int *等等来替换;size是每块的字节数;</span><br><span class="line">   n是读取的块数，如果成功，返回实际读取的块数(不是字节数)，本函数一般用于二进制模式打开的文件中。 </span><br><span class="line">　　例： </span><br><span class="line">　　 以下是引用片段： </span><br><span class="line">char x[4230]; </span><br><span class="line">　　FILE *file1&#x3D;fopen(&quot;c:&#x2F;&#x2F;msdos.sys&quot;,&quot;r&quot;); </span><br><span class="line">　　fread(x,200,12 ,file1);&#x2F;&#x2F;共读取200*12&#x3D;2400个字节 </span><br></pre></td></tr></table></figure>
+<h2 id="15-fwrite"><a href="#15-fwrite" class="headerlink" title="15.fwrite()"></a>15.fwrite()</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">　　与fread对应，向流中写指定的数据，原型是size_t fwrite(const void *ptr, size_t size, size_t n, FILE *stream);</span><br><span class="line">参数ptr是要写入的数据指针，void*的指针可用任何类型的指针来替换，如char*、int *等等来替换;size是每块的字节数;</span><br><span class="line">n是要写的块数，如果成功，返回实际写入的块数(不是字节数)，本函数一般用于二进制模式打开的文件中。</span><br><span class="line">　　例： </span><br><span class="line">　　 以下是引用片段： </span><br><span class="line">　　char x[]&#x3D;&quot;I Love You&quot;; </span><br><span class="line">　　fwire(x, 6,12,fp);&#x2F;&#x2F;写入6*12&#x3D;72字节 </span><br><span class="line">　　将把&quot;I Love&quot;写到流fp中12次，共72字节 </span><br></pre></td></tr></table></figure>
+<h2 id="16-tmpfile"><a href="#16-tmpfile" class="headerlink" title="16.tmpfile()"></a>16.tmpfile()</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">　　其原型是FILE *tmpfile(void); 生成一个临时文件，以&quot;w+b&quot;的模式打开，并返回这个临时流的指针，如果失败返回NULL。</span><br><span class="line">在程序结束时，这个文件会被自动删除。 </span><br><span class="line">　　例：FILE *fp&#x3D;tmpfile(); </span><br></pre></td></tr></table></figure>
+<h2 id="17-tmpnam"><a href="#17-tmpnam" class="headerlink" title="17.tmpnam();"></a>17.tmpnam();</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">　　其原型为char *tmpnam(char *s); 生成一个唯一的文件名，其实tmpfile()就调用了此函数，参数s用来保存得到的文件名，</span><br><span class="line">并返回这个指针，如果失败，返回NULL。 </span><br><span class="line">　　例：tmpnam(str1);</span><br></pre></td></tr></table></figure>
+<h3 id="win下文件路径格式-C-Users-Administrator-Desktop-openfile-hello-txt-必须是绝对路径-以-分割"><a href="#win下文件路径格式-C-Users-Administrator-Desktop-openfile-hello-txt-必须是绝对路径-以-分割" class="headerlink" title="win下文件路径格式    C:\Users\Administrator\Desktop\openfile\hello.txt     必须是绝对路径     以\分割"></a>win下文件路径格式    C:\Users\Administrator\Desktop\openfile\hello.txt     必须是绝对路径     以\分割</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">mode有以下几种方式：</span><br><span class="line"></span><br><span class="line">打开方式	说明</span><br><span class="line">r	以只读方式打开文件，该文件必须存在。</span><br><span class="line">r+	以读&#x2F;写方式打开文件，该文件必须存在。</span><br><span class="line">rb+	以读&#x2F;写方式打开一个二进制文件，只允许读&#x2F;写数据。</span><br><span class="line">rt+	以读&#x2F;写方式打开一个文本文件，允许读和写。</span><br><span class="line">w	打开只写文件，若文件存在则长度清为0，即该文件内容消失，若不存在则创建该文件。</span><br><span class="line">w+	打开可读&#x2F;写文件，若文件存在则文件长度清为零，即该文件内容会消失。若文件不存在则建立该文件。</span><br><span class="line">a	以附加的方式打开只写文件。若文件不存在，则会建立该文件，如果文件存在，写入的数据会被加到文件尾，</span><br><span class="line">即文件原先的内容会被保留（EOF符保留)。</span><br><span class="line">a+	以附加方式打开可读&#x2F;写的文件。若文件不存在，则会建立该文件，如果文件存在，则写入的数据会被加到文件尾后，</span><br><span class="line">即文件原先的内容会被保留（原来的EOF符 不保留)。</span><br><span class="line">wb	以只写方式打开或新建一个二进制文件，只允许写数据。</span><br><span class="line">wb+	以读&#x2F;写方式打开或建立一个二进制文件，允许读和写。</span><br><span class="line">wt+	以读&#x2F;写方式打开或建立一个文本文件，允许读写。</span><br><span class="line">at+	以读&#x2F;写方式打开一个文本文件，允许读或在文本末追加数据。</span><br><span class="line">ab+	以读&#x2F;写方式打开一个二进制文件，允许读或在文件末追加数据。</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/C/" rel="tag"># C</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2014/05/30/C4/" rel="prev" title="C4">
+      <i class="fa fa-chevron-left"></i> C4
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2014/08/11/C6%E7%BA%BF%E7%A8%8B/" rel="next" title="C6线程">
+      C6线程 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-fopen"><span class="nav-text">1.fopen()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-fclose"><span class="nav-text">2.fclose()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-fputc"><span class="nav-text">3.fputc()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-fgetc"><span class="nav-text">4.fgetc()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-fseek"><span class="nav-text">5. fseek()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-fputs"><span class="nav-text">6.fputs()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-fgets"><span class="nav-text">7.fgets()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-fprintf"><span class="nav-text">8.fprintf()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-fscanf"><span class="nav-text">9.fscanf()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-feof"><span class="nav-text">10.feof()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-ferror"><span class="nav-text">11.ferror()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12-rewind"><span class="nav-text">12.rewind()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13-remove"><span class="nav-text">13.remove()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#14-fread"><span class="nav-text">14.fread()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#15-fwrite"><span class="nav-text">15.fwrite()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#16-tmpfile"><span class="nav-text">16.tmpfile()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#17-tmpnam"><span class="nav-text">17.tmpnam();</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#win%E4%B8%8B%E6%96%87%E4%BB%B6%E8%B7%AF%E5%BE%84%E6%A0%BC%E5%BC%8F-C-Users-Administrator-Desktop-openfile-hello-txt-%E5%BF%85%E9%A1%BB%E6%98%AF%E7%BB%9D%E5%AF%B9%E8%B7%AF%E5%BE%84-%E4%BB%A5-%E5%88%86%E5%89%B2"><span class="nav-text">win下文件路径格式    C:\Users\Administrator\Desktop\openfile\hello.txt     必须是绝对路径     以\分割</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Loiszad"
+      src="/images/IMG_0167.JPG">
+  <p class="site-author-name" itemprop="name">Loiszad</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2013 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Loiszad</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

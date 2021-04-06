@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Consolas:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="1.单位DPI：DPI是密度density的测量单位，dots per inch 每英寸内的像素数。DIP:DIP是指定大小的单位，device independent pixels设备独立像素。 Adnroid1.6或以上SDK，在AndroidManifest.xml中提供新的一个元素用于支持多屏幕机制。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="适配不同分辨率屏幕">
+<meta property="og:url" content="http://yoursite.com/2014/05/13/%E9%80%82%E9%85%8D%E4%B8%8D%E5%90%8C%E5%88%86%E8%BE%A8%E7%8E%87%E5%B1%8F%E5%B9%95/index.html">
+<meta property="og:site_name" content="郁闷的不行">
+<meta property="og:description" content="1.单位DPI：DPI是密度density的测量单位，dots per inch 每英寸内的像素数。DIP:DIP是指定大小的单位，device independent pixels设备独立像素。 Adnroid1.6或以上SDK，在AndroidManifest.xml中提供新的一个元素用于支持多屏幕机制。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/Loiszad/images/master/images/821132529041.png">
+<meta property="article:published_time" content="2014-05-13T06:10:33.000Z">
+<meta property="article:modified_time" content="2021-04-06T03:14:02.612Z">
+<meta property="article:author" content="Loiszad">
+<meta property="article:tag" content="Android">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Loiszad/images/master/images/821132529041.png">
+
+<link rel="canonical" href="http://yoursite.com/2014/05/13/%E9%80%82%E9%85%8D%E4%B8%8D%E5%90%8C%E5%88%86%E8%BE%A8%E7%8E%87%E5%B1%8F%E5%B9%95/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>适配不同分辨率屏幕 | 郁闷的不行</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">郁闷的不行</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">踏歌长行，梦想永在 ~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2014/05/13/%E9%80%82%E9%85%8D%E4%B8%8D%E5%90%8C%E5%88%86%E8%BE%A8%E7%8E%87%E5%B1%8F%E5%B9%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/IMG_0167.JPG">
+      <meta itemprop="name" content="Loiszad">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="郁闷的不行">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          适配不同分辨率屏幕
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2014-05-13 14:10:33" itemprop="dateCreated datePublished" datetime="2014-05-13T14:10:33+08:00">2014-05-13</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="1-单位"><a href="#1-单位" class="headerlink" title="1.单位"></a>1.单位</h2><p><strong>DPI：DPI是密度density的测量单位，dots per inch 每英寸内的像素数。</strong><br><strong>DIP:DIP是指定大小的单位，device independent pixels设备独立像素。</strong></p>
+<p>Adnroid1.6或以上SDK，在AndroidManifest.xml中提供新的一个元素<supports-screens>用于支持多屏幕机制。</p>
+<span id="more"></span>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&lt;supports-screens</span><br><span class="line">android:largeScreens=&quot;true&quot;   是否支持大屏</span><br><span class="line">android:normalScreens=&quot;true&quot;  是否支持中屏</span><br><span class="line">android:smallScreens=&quot;true&quot;   是否支持小屏</span><br><span class="line">android:anyDensity=&quot;true&quot;     是否支持多种不同密度</span><br><span class="line">/&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-单位转换"><a href="#2-单位转换" class="headerlink" title="2.单位转换"></a>2.单位转换</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * DIP转PX</span></span><br><span class="line"><span class="comment">	 * </span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> context</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> dipValue</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> int</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">dip2px</span><span class="params">(Context context, <span class="keyword">float</span> dipValue)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">final</span> <span class="keyword">float</span> scale = context.getResources().getDisplayMetrics().density;</span><br><span class="line">		<span class="keyword">return</span> (<span class="keyword">int</span>) (dipValue * scale + <span class="number">0.5f</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * PX转DIP</span></span><br><span class="line"><span class="comment">	 * </span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> context</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> pxValue</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> int</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">px2dip</span><span class="params">(Context context, <span class="keyword">float</span> pxValue)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">final</span> <span class="keyword">float</span> scale = context.getResources().getDisplayMetrics().density;</span><br><span class="line">		<span class="keyword">return</span> (<span class="keyword">int</span>) (pxValue / scale + <span class="number">0.5f</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="3-解决方案"><a href="#3-解决方案" class="headerlink" title="3.解决方案"></a>3.解决方案</h2><p><img src="https://raw.githubusercontent.com/Loiszad/images/master/images/821132529041.png"></p>
+<p>**文件夹对应：@？x   分辨率    dpi</p>
+<p>对于Android适配，目前主流机型分辨率为1920x1080，1280x720，800x480等，平时开发中适配也主要适配这三个分辨率。</p>
+<p>  ● 理想情况下，就目前市面手机分布趋势，美工出800x480，1280x720，1920x1080三套图，放在HDPI，XHDPI，XXHDPI中，则图片适配问题就可以解决。<br>  ● 至于其他的适配问题，比如边缘的margin，控件的padding，则可以用values-xxdpi，values-xdpi，在对应的dimens.xml中，item名称一样，数值不一样，不同的设备将会自动在不同的dimens获取数值，得到最佳适配效果。</p>
+<h2 id="4-工具"><a href="#4-工具" class="headerlink" title="4.工具"></a>4.工具</h2><p>在项目开发中，UI给过来的设计图上的尺寸标识，一般以px（像素）为单位。Android工程师需根据设计图的尺寸将px换成dp，填到layout.xml中。<br>有了这个工具，可以很方便地实现这一点。<br>首先，确认设计图属于下列哪种规格：<br>ldpi (low) ~120dpi<br>mdpi (medium) ~160dpi<br>hdpi (high) ~240dpi<br>xhdpi (extra-high) ~320dpi<br>xxhdpi (extra-extra-high) ~480dpi<br>xxxhdpi (extra-extra-extra-high) ~640dpi</p>
+<p>然后安装python，运行一个脚本：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"></span><br><span class="line">g_type_scale_dict = &#123;</span><br><span class="line">        <span class="string">&quot;mdpi&quot;</span>: <span class="number">1</span>,</span><br><span class="line">        <span class="string">&quot;hdpi&quot;</span>: <span class="number">0.67</span>,</span><br><span class="line">        <span class="string">&quot;xhdpi&quot;</span>: <span class="number">0.5</span>,</span><br><span class="line">        <span class="string">&quot;xxhdpi&quot;</span>: <span class="number">0.33</span>,</span><br><span class="line">        <span class="string">&quot;xxxhdpi&quot;</span>: <span class="number">0.25</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>(<span class="params">start, end, device_type</span>):</span></span><br><span class="line">    <span class="keyword">if</span> device_type <span class="keyword">not</span> <span class="keyword">in</span> g_type_scale_dict:</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&quot;invaild device_type&quot;</span>, device_type</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    scale = g_type_scale_dict[device_type]</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;&lt;!-- wrapper for px --&gt;&quot;</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(start, end+<span class="number">1</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;&lt;dimen name=&quot;_%dpx&quot;&gt;%.1fdp&lt;/dimen&gt;&#x27;</span> % (i, i*scale))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;&quot;</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(start, end+<span class="number">1</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;&lt;dimen name=&quot;_%dspx&quot;&gt;%.1fsp&lt;/dimen&gt;&#x27;</span> % (i, i*scale))</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    parser = argparse.ArgumentParser()</span><br><span class="line"></span><br><span class="line">    parser.add_argument(dest=<span class="string">&quot;start&quot;</span>, <span class="built_in">type</span>=<span class="built_in">int</span>)</span><br><span class="line">    parser.add_argument(dest=<span class="string">&quot;end&quot;</span>, <span class="built_in">type</span>=<span class="built_in">int</span>)</span><br><span class="line">    parser.add_argument(dest=<span class="string">&quot;device_type&quot;</span>)</span><br><span class="line">    args = parser.parse_args()</span><br><span class="line"></span><br><span class="line">    main(args.start, args.end, args.device_type)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>然后在控制台中输入：<br>python dp_convertor.py 1 100 xxhdpi</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">可得到：</span><br><span class="line"><span class="comment">&lt;!-- wrapper for px --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_1px&quot;</span>&gt;</span>0.3dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_2px&quot;</span>&gt;</span>0.7dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_3px&quot;</span>&gt;</span>1.0dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_4px&quot;</span>&gt;</span>1.3dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_5px&quot;</span>&gt;</span>1.7dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_6px&quot;</span>&gt;</span>2.0dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_7px&quot;</span>&gt;</span>2.3dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_8px&quot;</span>&gt;</span>2.6dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_9px&quot;</span>&gt;</span>3.0dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_10px&quot;</span>&gt;</span>3.3dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_11px&quot;</span>&gt;</span>3.6dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_12px&quot;</span>&gt;</span>4.0dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_13px&quot;</span>&gt;</span>4.3dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_14px&quot;</span>&gt;</span>4.6dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_15px&quot;</span>&gt;</span>5.0dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_16px&quot;</span>&gt;</span>5.3dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_17px&quot;</span>&gt;</span>5.6dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_18px&quot;</span>&gt;</span>5.9dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_19px&quot;</span>&gt;</span>6.3dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_20px&quot;</span>&gt;</span>6.6dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_21px&quot;</span>&gt;</span>6.9dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_22px&quot;</span>&gt;</span>7.3dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_23px&quot;</span>&gt;</span>7.6dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_24px&quot;</span>&gt;</span>7.9dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_25px&quot;</span>&gt;</span>8.2dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_26px&quot;</span>&gt;</span>8.6dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_27px&quot;</span>&gt;</span>8.9dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_28px&quot;</span>&gt;</span>9.2dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_29px&quot;</span>&gt;</span>9.6dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_30px&quot;</span>&gt;</span>9.9dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_31px&quot;</span>&gt;</span>10.2dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_32px&quot;</span>&gt;</span>10.6dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_33px&quot;</span>&gt;</span>10.9dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_34px&quot;</span>&gt;</span>11.2dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_35px&quot;</span>&gt;</span>11.6dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_36px&quot;</span>&gt;</span>11.9dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_37px&quot;</span>&gt;</span>12.2dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_38px&quot;</span>&gt;</span>12.5dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_39px&quot;</span>&gt;</span>12.9dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_40px&quot;</span>&gt;</span>13.2dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_41px&quot;</span>&gt;</span>13.5dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_42px&quot;</span>&gt;</span>13.9dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_43px&quot;</span>&gt;</span>14.2dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_44px&quot;</span>&gt;</span>14.5dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_45px&quot;</span>&gt;</span>14.9dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_46px&quot;</span>&gt;</span>15.2dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_47px&quot;</span>&gt;</span>15.5dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_48px&quot;</span>&gt;</span>15.8dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_49px&quot;</span>&gt;</span>16.2dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_50px&quot;</span>&gt;</span>16.5dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_51px&quot;</span>&gt;</span>16.8dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_52px&quot;</span>&gt;</span>17.2dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_53px&quot;</span>&gt;</span>17.5dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_54px&quot;</span>&gt;</span>17.8dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_55px&quot;</span>&gt;</span>18.2dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_56px&quot;</span>&gt;</span>18.5dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_57px&quot;</span>&gt;</span>18.8dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_58px&quot;</span>&gt;</span>19.1dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_59px&quot;</span>&gt;</span>19.5dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_60px&quot;</span>&gt;</span>19.8dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_61px&quot;</span>&gt;</span>20.1dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_62px&quot;</span>&gt;</span>20.5dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_63px&quot;</span>&gt;</span>20.8dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_64px&quot;</span>&gt;</span>21.1dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_65px&quot;</span>&gt;</span>21.4dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_66px&quot;</span>&gt;</span>21.8dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_67px&quot;</span>&gt;</span>22.1dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_68px&quot;</span>&gt;</span>22.4dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_69px&quot;</span>&gt;</span>22.8dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_70px&quot;</span>&gt;</span>23.1dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_71px&quot;</span>&gt;</span>23.4dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_72px&quot;</span>&gt;</span>23.8dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_73px&quot;</span>&gt;</span>24.1dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_74px&quot;</span>&gt;</span>24.4dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_75px&quot;</span>&gt;</span>24.8dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_76px&quot;</span>&gt;</span>25.1dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_77px&quot;</span>&gt;</span>25.4dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_78px&quot;</span>&gt;</span>25.7dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_79px&quot;</span>&gt;</span>26.1dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_80px&quot;</span>&gt;</span>26.4dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_81px&quot;</span>&gt;</span>26.7dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_82px&quot;</span>&gt;</span>27.1dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_83px&quot;</span>&gt;</span>27.4dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_84px&quot;</span>&gt;</span>27.7dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_85px&quot;</span>&gt;</span>28.1dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_86px&quot;</span>&gt;</span>28.4dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_87px&quot;</span>&gt;</span>28.7dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_88px&quot;</span>&gt;</span>29.0dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_89px&quot;</span>&gt;</span>29.4dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_90px&quot;</span>&gt;</span>29.7dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_91px&quot;</span>&gt;</span>30.0dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_92px&quot;</span>&gt;</span>30.4dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_93px&quot;</span>&gt;</span>30.7dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_94px&quot;</span>&gt;</span>31.0dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_95px&quot;</span>&gt;</span>31.4dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_96px&quot;</span>&gt;</span>31.7dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_97px&quot;</span>&gt;</span>32.0dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_98px&quot;</span>&gt;</span>32.3dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_99px&quot;</span>&gt;</span>32.7dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_100px&quot;</span>&gt;</span>33.0dp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_1spx&quot;</span>&gt;</span>0.3sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_2spx&quot;</span>&gt;</span>0.7sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_3spx&quot;</span>&gt;</span>1.0sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_4spx&quot;</span>&gt;</span>1.3sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_5spx&quot;</span>&gt;</span>1.7sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_6spx&quot;</span>&gt;</span>2.0sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_7spx&quot;</span>&gt;</span>2.3sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_8spx&quot;</span>&gt;</span>2.6sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_9spx&quot;</span>&gt;</span>3.0sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_10spx&quot;</span>&gt;</span>3.3sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_11spx&quot;</span>&gt;</span>3.6sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_12spx&quot;</span>&gt;</span>4.0sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_13spx&quot;</span>&gt;</span>4.3sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_14spx&quot;</span>&gt;</span>4.6sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_15spx&quot;</span>&gt;</span>5.0sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_16spx&quot;</span>&gt;</span>5.3sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_17spx&quot;</span>&gt;</span>5.6sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_18spx&quot;</span>&gt;</span>5.9sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_19spx&quot;</span>&gt;</span>6.3sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_20spx&quot;</span>&gt;</span>6.6sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_21spx&quot;</span>&gt;</span>6.9sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_22spx&quot;</span>&gt;</span>7.3sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_23spx&quot;</span>&gt;</span>7.6sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_24spx&quot;</span>&gt;</span>7.9sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_25spx&quot;</span>&gt;</span>8.2sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_26spx&quot;</span>&gt;</span>8.6sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_27spx&quot;</span>&gt;</span>8.9sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_28spx&quot;</span>&gt;</span>9.2sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_29spx&quot;</span>&gt;</span>9.6sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_30spx&quot;</span>&gt;</span>9.9sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_31spx&quot;</span>&gt;</span>10.2sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_32spx&quot;</span>&gt;</span>10.6sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_33spx&quot;</span>&gt;</span>10.9sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_34spx&quot;</span>&gt;</span>11.2sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_35spx&quot;</span>&gt;</span>11.6sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_36spx&quot;</span>&gt;</span>11.9sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_37spx&quot;</span>&gt;</span>12.2sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_38spx&quot;</span>&gt;</span>12.5sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_39spx&quot;</span>&gt;</span>12.9sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_40spx&quot;</span>&gt;</span>13.2sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_41spx&quot;</span>&gt;</span>13.5sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_42spx&quot;</span>&gt;</span>13.9sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_43spx&quot;</span>&gt;</span>14.2sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_44spx&quot;</span>&gt;</span>14.5sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_45spx&quot;</span>&gt;</span>14.9sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_46spx&quot;</span>&gt;</span>15.2sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_47spx&quot;</span>&gt;</span>15.5sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_48spx&quot;</span>&gt;</span>15.8sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_49spx&quot;</span>&gt;</span>16.2sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_50spx&quot;</span>&gt;</span>16.5sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_51spx&quot;</span>&gt;</span>16.8sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_52spx&quot;</span>&gt;</span>17.2sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_53spx&quot;</span>&gt;</span>17.5sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_54spx&quot;</span>&gt;</span>17.8sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_55spx&quot;</span>&gt;</span>18.2sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_56spx&quot;</span>&gt;</span>18.5sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_57spx&quot;</span>&gt;</span>18.8sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_58spx&quot;</span>&gt;</span>19.1sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_59spx&quot;</span>&gt;</span>19.5sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_60spx&quot;</span>&gt;</span>19.8sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_61spx&quot;</span>&gt;</span>20.1sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_62spx&quot;</span>&gt;</span>20.5sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_63spx&quot;</span>&gt;</span>20.8sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_64spx&quot;</span>&gt;</span>21.1sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_65spx&quot;</span>&gt;</span>21.4sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_66spx&quot;</span>&gt;</span>21.8sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_67spx&quot;</span>&gt;</span>22.1sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_68spx&quot;</span>&gt;</span>22.4sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_69spx&quot;</span>&gt;</span>22.8sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_70spx&quot;</span>&gt;</span>23.1sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_71spx&quot;</span>&gt;</span>23.4sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_72spx&quot;</span>&gt;</span>23.8sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_73spx&quot;</span>&gt;</span>24.1sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_74spx&quot;</span>&gt;</span>24.4sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_75spx&quot;</span>&gt;</span>24.8sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_76spx&quot;</span>&gt;</span>25.1sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_77spx&quot;</span>&gt;</span>25.4sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_78spx&quot;</span>&gt;</span>25.7sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_79spx&quot;</span>&gt;</span>26.1sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_80spx&quot;</span>&gt;</span>26.4sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_81spx&quot;</span>&gt;</span>26.7sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_82spx&quot;</span>&gt;</span>27.1sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_83spx&quot;</span>&gt;</span>27.4sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_84spx&quot;</span>&gt;</span>27.7sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_85spx&quot;</span>&gt;</span>28.1sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_86spx&quot;</span>&gt;</span>28.4sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_87spx&quot;</span>&gt;</span>28.7sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_88spx&quot;</span>&gt;</span>29.0sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_89spx&quot;</span>&gt;</span>29.4sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_90spx&quot;</span>&gt;</span>29.7sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_91spx&quot;</span>&gt;</span>30.0sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_92spx&quot;</span>&gt;</span>30.4sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_93spx&quot;</span>&gt;</span>30.7sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_94spx&quot;</span>&gt;</span>31.0sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_95spx&quot;</span>&gt;</span>31.4sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_96spx&quot;</span>&gt;</span>31.7sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_97spx&quot;</span>&gt;</span>32.0sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_98spx&quot;</span>&gt;</span>32.3sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_99spx&quot;</span>&gt;</span>32.7sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;_100spx&quot;</span>&gt;</span>33.0sp<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>将以上复制到你项目的dimens.xml中，以后可以直接按照设计图的px值，在layout.xml中写@dimen/_**px了。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2014/05/04/C3/" rel="prev" title="C3">
+      <i class="fa fa-chevron-left"></i> C3
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2014/05/30/C4/" rel="next" title="C4">
+      C4 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%8D%95%E4%BD%8D"><span class="nav-text">1.单位</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%8D%95%E4%BD%8D%E8%BD%AC%E6%8D%A2"><span class="nav-text">2.单位转换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-text">3.解决方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%B7%A5%E5%85%B7"><span class="nav-text">4.工具</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Loiszad"
+      src="/images/IMG_0167.JPG">
+  <p class="site-author-name" itemprop="name">Loiszad</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2013 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Loiszad</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Consolas:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Pthread是 POSIX threads 的简称，是POSIX的线程标准。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C7线程读写锁">
+<meta property="og:url" content="http://yoursite.com/2014/08/11/C7%E7%BA%BF%E7%A8%8B%E9%94%81/index.html">
+<meta property="og:site_name" content="郁闷的不行">
+<meta property="og:description" content="Pthread是 POSIX threads 的简称，是POSIX的线程标准。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2014-08-11T07:08:17.000Z">
+<meta property="article:modified_time" content="2021-04-06T03:18:13.837Z">
+<meta property="article:author" content="Loiszad">
+<meta property="article:tag" content="C">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2014/08/11/C7%E7%BA%BF%E7%A8%8B%E9%94%81/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>C7线程读写锁 | 郁闷的不行</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">郁闷的不行</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">踏歌长行，梦想永在 ~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2014/08/11/C7%E7%BA%BF%E7%A8%8B%E9%94%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/IMG_0167.JPG">
+      <meta itemprop="name" content="Loiszad">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="郁闷的不行">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          C7线程读写锁
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2014-08-11 15:08:17" itemprop="dateCreated datePublished" datetime="2014-08-11T15:08:17+08:00">2014-08-11</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="Pthread是-POSIX-threads-的简称，是POSIX的线程标准。"><a href="#Pthread是-POSIX-threads-的简称，是POSIX的线程标准。" class="headerlink" title="Pthread是 POSIX threads 的简称，是POSIX的线程标准。"></a>Pthread是 POSIX threads 的简称，是POSIX的线程标准。</h3><span id="more"></span>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">pthread读写锁把对共享资源的访问者分为读者和写者，读者只对共享资源进行读访问，写者只对共享资源进行写操作。</span><br><span class="line">在互斥机制，读者和写者都需要独立独占互斥量以独占共享资源，在读写锁机制下，允许同时有多个读者读访问共享资源，</span><br><span class="line">只有写者才需要独占资源。相比互斥机制，读写机制由于允许多个读者同时读访问共享资源，进一步提高了多线程的并发度。</span><br><span class="line">&#96;&#96;&#96;         </span><br><span class="line"></span><br><span class="line">## 1.读写锁机制：</span><br></pre></td></tr></table></figure>
+<p>写者：写者使用写锁，如果当前没有读者，也没有其他写者，写者立即获得写锁；否则写者将等待，直到没有读者和写者。<br>读者：读者使用读锁，如果当前没有写者，读者立即获得读锁；否则读者等待，直到没有写者。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">## 2.读写锁特性：</span><br></pre></td></tr></table></figure>
+<p>同一时刻只有一个线程可以获得写锁，同一时刻可以有多个线程获得读锁。<br>读写锁出于写锁状态时，所有试图对读写锁加锁的线程，不管是读者试图加读锁，还是写者试图加写锁，都会被阻塞。<br>读写锁处于读锁状态时，有写者试图加写锁时，之后的其他线程的读锁请求会被阻塞，以避免写者长时间的不写锁。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">## 3.读写锁基本函数：</span><br></pre></td></tr></table></figure>
+<pre><code>     # include&lt;pthread.h&gt;
+</code></pre>
+<p>读写锁初始化：<br>       int pthread_rwlock_init(pthread_rwlock_t * rwlock,<br>                                                 const pthread_rwlockattr_t *  attr);<br>        该函数第一个参数为读写锁指针，第二个参数为读写锁属性指针。函数按读写锁属性对读写锁进行初始化。<br>加读锁：<br>        int pthread_rwlock_rdlock(pthread_rwlock_t *rwlock);<br>        该函数参数为读写锁指针。函数用于对读写锁加读锁。<br>加写锁：<br>        int pthread_rwlock_wrlock(pthread_rwlock_t *rwlock);<br>        该函数参数为读写锁指针。函数用于对读写锁加写锁。<br>释放读写锁：<br>        int pthread_rwlock_unlock(pthread_rwlock_t *rwlock);<br>        该函数参数为读写锁指针。函数用于释放读写锁，包括读锁与写锁。<br>销毁读写锁：<br>        int pthread_rwlock_destroy(pthread_rwlock_t *rwlock);<br>        该函数参数为读写锁指针。函数用于销毁读写锁。</p>
+<pre><code>## 4.牛刀小试：
+**示例使用读写锁，对共享资源data进行读写同步，线程readerM，readerN为读者线程，线程writerA，writerB为写者线程**
+```c
+#include &lt;stdio.h&gt;
+#include &lt;Windows.h&gt;
+#include &lt;pthread.h&gt;
+#include &lt;semaphore.h&gt;
+#pragma comment(lib, &quot;pthreadVC2.lib&quot;)     //必须加上这句
+pthread_t t1;           //pthread_t变量t1，用于获取线程1的ID
+pthread_t t2;           //pthread_t变量t2，用于获取线程2的ID
+pthread_rwlock_t rwlock;             //声明读写锁
+int data=1;                          //共享资源
+void* readerM(void* arg)
+&#123;
+    while(1)
+    &#123;
+    pthread_rwlock_rdlock(&amp;rwlock);    //读者加读锁
+    printf(&quot;M 读者读出: %d \n&quot;,data);   //读取共享资源
+    pthread_rwlock_unlock(&amp;rwlock);    //读者释放读锁
+    Sleep(1200);
+    &#125;
+    return NULL;
+&#125;
+void* readerN(void* arg)
+&#123;
+    while(1)
+    &#123;
+    pthread_rwlock_rdlock(&amp;rwlock);
+    printf(&quot; N读者读出: %d \n&quot;,data);
+    pthread_rwlock_unlock(&amp;rwlock);
+    Sleep(700);
+    &#125;
+    return NULL;
+&#125;
+void* writerA(void* arg)
+&#123;
+    while(1)
+    &#123;
+    pthread_rwlock_wrlock(&amp;rwlock);      //写者加写锁
+    data++;                              //对共享资源写数据
+    printf(&quot;    A写者写入: %d\n&quot;,data);
+    pthread_rwlock_unlock(&amp;rwlock);      //释放写锁
+    Sleep(2000);
+    &#125;
+    return NULL;
+&#125;
+void* writerB(void* arg)
+&#123;
+    while(1)
+    &#123;
+    pthread_rwlock_wrlock(&amp;rwlock);
+     data++;
+    printf(&quot;    B写者写入: %d\n&quot;,data);
+    pthread_rwlock_unlock(&amp;rwlock);
+    Sleep(2000);
+    &#125;
+    return NULL;
+&#125;
+void main(int argc,char** argv)
+&#123;
+    pthread_rwlock_init(&amp;rwlock, NULL);   //初始化读写锁
+    
+    pthread_create(&amp;t1,NULL,readerM,NULL);
+    pthread_create(&amp;t1,NULL,readerN,NULL);
+    pthread_create(&amp;t2,NULL,writerA,NULL);
+    pthread_create(&amp;t2,NULL,writerB,NULL);
+
+    pthread_rwlock_destroy(&amp;rwlock);      //销毁读写锁
+
+    Sleep(10000000);
+    return;
+&#125;
+</code></pre>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/C/" rel="tag"># C</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2014/08/11/C6%E7%BA%BF%E7%A8%8B/" rel="prev" title="C6线程">
+      <i class="fa fa-chevron-left"></i> C6线程
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2014/08/13/C8%E5%AD%90%E8%BF%9B%E7%A8%8B/" rel="next" title="C8子进程">
+      C8子进程 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Pthread%E6%98%AF-POSIX-threads-%E7%9A%84%E7%AE%80%E7%A7%B0%EF%BC%8C%E6%98%AFPOSIX%E7%9A%84%E7%BA%BF%E7%A8%8B%E6%A0%87%E5%87%86%E3%80%82"><span class="nav-text">Pthread是 POSIX threads 的简称，是POSIX的线程标准。</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Loiszad"
+      src="/images/IMG_0167.JPG">
+  <p class="site-author-name" itemprop="name">Loiszad</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2013 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Loiszad</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
