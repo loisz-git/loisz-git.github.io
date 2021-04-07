@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Consolas:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="一、Basic1. bitwise operator in conditional 条件语句中的位运算简单解释：OCLint认为位运算符可读性不好 123456void example(int a, int b) &amp;#123;    if (a | b) &amp;#123;    &amp;#125;    if (a &amp; b) &amp;#123;    &amp;#125;&amp;#125;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OCLint默认的71个规则">
+<meta property="og:url" content="http://yoursite.com/2021/03/12/OCLint%E9%BB%98%E8%AE%A4%E7%9A%8471%E4%B8%AA%E8%A7%84%E5%88%99/index.html">
+<meta property="og:site_name" content="郁闷的不行">
+<meta property="og:description" content="一、Basic1. bitwise operator in conditional 条件语句中的位运算简单解释：OCLint认为位运算符可读性不好 123456void example(int a, int b) &amp;#123;    if (a | b) &amp;#123;    &amp;#125;    if (a &amp; b) &amp;#123;    &amp;#125;&amp;#125;">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-03-12T00:58:22.000Z">
+<meta property="article:modified_time" content="2021-04-07T01:05:26.947Z">
+<meta property="article:author" content="Loiszad">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2021/03/12/OCLint%E9%BB%98%E8%AE%A4%E7%9A%8471%E4%B8%AA%E8%A7%84%E5%88%99/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>OCLint默认的71个规则 | 郁闷的不行</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">郁闷的不行</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">踏歌长行，梦想永在 ~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/03/12/OCLint%E9%BB%98%E8%AE%A4%E7%9A%8471%E4%B8%AA%E8%A7%84%E5%88%99/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/IMG_0167.JPG">
+      <meta itemprop="name" content="Loiszad">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="郁闷的不行">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          OCLint默认的71个规则
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-03-12 08:58:22" itemprop="dateCreated datePublished" datetime="2021-03-12T08:58:22+08:00">2021-03-12</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="一、Basic"><a href="#一、Basic" class="headerlink" title="一、Basic"></a>一、Basic</h3><h5 id="1-bitwise-operator-in-conditional-条件语句中的位运算"><a href="#1-bitwise-operator-in-conditional-条件语句中的位运算" class="headerlink" title="1. bitwise operator in conditional 条件语句中的位运算"></a>1. bitwise operator in conditional 条件语句中的位运算</h5><p>简单解释：OCLint认为位运算符可读性不好</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">void example(int a, int b) &#123;</span><br><span class="line">    if (a | b) &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    if (a &amp; b) &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<h5 id="2-broken-null-check"><a href="#2-broken-null-check" class="headerlink" title="2. broken null check"></a>2. broken null check</h5><p>简单解释：错误的null检查会导致程序crash。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//并不会崩溃  只是逻辑有问题</span></span><br><span class="line"><span class="keyword">void</span> m(A *a, B *b) &#123;</span><br><span class="line">       <span class="keyword">if</span> (a != <span class="literal">NULL</span> || a-&gt;bar(b))</span><br><span class="line">       &#123;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">if</span> (a == <span class="literal">NULL</span> &amp;&amp; a-&gt;bar(b))</span><br><span class="line">       &#123;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;   </span><br></pre></td></tr></table></figure>
+
+<h5 id="3-broken-nil-check"><a href="#3-broken-nil-check" class="headerlink" title="3. broken nil check"></a>3. broken nil check</h5><p>简单解释：Objective-C中判空，有些情况下会返回预期相反的结果</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//这样写应该是逻辑错误</span></span><br><span class="line">+ (<span class="keyword">void</span>)compare:(A *)obj1 withOther:(A *)obj2 &#123;</span><br><span class="line">        <span class="keyword">if</span> (obj1 || [obj1 isEqualTo:obj2])</span><br><span class="line">        &#123;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (!obj1 &amp;&amp; ![obj1 isEqualTo:obj2])</span><br><span class="line">        &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="4-broken-oddness-check"><a href="#4-broken-oddness-check" class="headerlink" title="4. broken oddness check"></a>4. broken oddness check</h5><p>使用 x % 2 == 1 进行奇数检查，如果是负数会不正常，应该使用 x &amp; 1 == 1 或者 x % 2 != 0 这种方式。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> example() &#123;</span><br><span class="line">        <span class="keyword">if</span> (x % <span class="number">2</span> == <span class="number">1</span>)         <span class="comment">// violation</span></span><br><span class="line">        &#123;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (foo() % <span class="number">2</span> == <span class="number">1</span>)     <span class="comment">// violation</span></span><br><span class="line">        &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="5-collapsible-if-statements"><a href="#5-collapsible-if-statements" class="headerlink" title="5. collapsible if statements"></a>5. collapsible if statements</h5><p>两个连续if语句可以合并为一个，以提高代码的简洁和可读性。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> example(<span class="keyword">bool</span> x, <span class="keyword">bool</span> y)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (x)              <span class="comment">// these two if statements can be</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (y)          <span class="comment">// combined to if (x &amp;&amp; y)</span></span><br><span class="line">        &#123;</span><br><span class="line">            foo();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="6-constant-conditional-operator"><a href="#6-constant-conditional-operator" class="headerlink" title="6. constant conditional operator"></a>6. constant conditional operator</h5><p>检查始终为true或者false的操作，会使人疑惑。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> example() &#123;</span><br><span class="line">        <span class="keyword">int</span> a = <span class="number">1</span> == <span class="number">1</span> ? <span class="number">1</span> : <span class="number">0</span>;     <span class="comment">// 1 == 1 is actually always true</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="7-constant-if-expression"><a href="#7-constant-if-expression" class="headerlink" title="7. constant if expression"></a>7. constant if expression</h5><p>if始终为true或者false的操作，会使人疑惑。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> example()&#123;</span><br><span class="line">       <span class="keyword">if</span> (<span class="literal">true</span>) &#123;      <span class="comment">// always true</span></span><br><span class="line">           foo();</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">if</span> (<span class="number">1</span> == <span class="number">0</span>) &#123;    <span class="comment">// always false</span></span><br><span class="line">           bar();</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="8-dead-code"><a href="#8-dead-code" class="headerlink" title="8. dead code"></a>8. dead code</h5><p>在 return、 break、 continue and throw 之后的代码都是无效的</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> example(<span class="keyword">id</span> collection) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">id</span> it <span class="keyword">in</span> collection) &#123;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">            <span class="keyword">int</span> i1;                 <span class="comment">// dead code</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">        <span class="keyword">int</span> i2;                     <span class="comment">// dead code</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="9-double-negative"><a href="#9-double-negative" class="headerlink" title="9. double negative"></a>9. double negative</h5><p>使用双重否定没有意义，它总是正向的。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> example()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> b1 = !!<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> b2 = ~~<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="10-for-loop-should-be-while-loop"><a href="#10-for-loop-should-be-while-loop" class="headerlink" title="10. for loop should be while loop"></a>10. for loop should be while loop</h5><p>在某些情况下，可以将一些 for 循环简化为 while 循环，以使代码更简洁。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> example(<span class="keyword">int</span> a)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">for</span> (; a &lt; <span class="number">100</span>;)</span><br><span class="line">    &#123;</span><br><span class="line">        foo(a);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="11-goto-statement"><a href="#11-goto-statement" class="headerlink" title="11. goto statement"></a>11. goto statement</h5><p>goto 语句不利于逻辑连贯性。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> example()</span><br><span class="line">&#123;</span><br><span class="line">    A:</span><br><span class="line">        a();</span><br><span class="line">    <span class="keyword">goto</span> A;     <span class="comment">// Considered Harmful</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h5 id="12-jumbled-incrementer"><a href="#12-jumbled-incrementer" class="headerlink" title="12. jumbled incrementer"></a>12. jumbled incrementer</h5><p>混乱的迭代器通常会出现错误，可读性不好。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> aMethod(<span class="keyword">int</span> a) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; a; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; a; i++) &#123;     <span class="comment">// references both &#x27;i&#x27; and &#x27;j&#x27;</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="13-misplaced-null-check"><a href="#13-misplaced-null-check" class="headerlink" title="13. misplaced null check"></a>13. misplaced null check</h5><p>空指针检查放在错误的位置，空指针检查应该放在最前面。在C和c++中，向空指针发送消息可能会导致程序崩溃。当空指针检查放错位置时，要么检查无效，要么检查不正确</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> m(A *a, B *b)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (a-&gt;bar(b) &amp;&amp; a != <span class="literal">NULL</span>) <span class="comment">// violation</span></span><br><span class="line">    &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (a-&gt;bar(b) || !a)        <span class="comment">// violation</span></span><br><span class="line">    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="14-misplaced-nil-check"><a href="#14-misplaced-nil-check" class="headerlink" title="14. misplaced nil check"></a>14. misplaced nil check</h5><p>Objective-C在条件判断的时候注意nil判断放在前面，逻辑短路。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">+ (<span class="keyword">void</span>)compare:(A *)obj1 withOther:(A *)obj2</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> ([obj1 isEqualTo:obj2] &amp;&amp; obj1)</span><br><span class="line">    &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (![obj1 isEqualTo:obj2] || obj1 == <span class="literal">nil</span>)</span><br><span class="line">    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h5 id="15-multiple-unary-operator"><a href="#15-multiple-unary-operator" class="headerlink" title="15. multiple unary operator"></a>15. multiple unary operator</h5><p>连续多重运算符不易理解，应该简化。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> example()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> b = -(+(!(~<span class="number">1</span>)));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h5 id="16-return-from-finally-block"><a href="#16-return-from-finally-block" class="headerlink" title="16. return from finally block"></a>16. return from finally block</h5><p>不建议在finally块中return。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> example()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">@try</span></span><br><span class="line">    &#123;</span><br><span class="line">        foo();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">@catch</span>(<span class="keyword">id</span> ex)</span><br><span class="line">    &#123;</span><br><span class="line">        bar();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">@finally</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span>; <span class="comment">// this can discard exceptions.</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="17-throw-exception-from-finally-block"><a href="#17-throw-exception-from-finally-block" class="headerlink" title="17. throw exception from finally block"></a>17. throw exception from finally block</h5><p>在finally块中抛出异常可能会掩盖其他异常或代码缺陷。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> example()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">@try</span> &#123;;&#125;</span><br><span class="line">    <span class="keyword">@catch</span>(<span class="keyword">id</span> ex) &#123;;&#125;</span><br><span class="line">    <span class="keyword">@finally</span> &#123;</span><br><span class="line">        <span class="keyword">id</span> ex1;</span><br><span class="line">        <span class="keyword">@throw</span> ex1;  <span class="comment">// this throws an exception</span></span><br><span class="line">        <span class="built_in">NSException</span> *ex2 = [<span class="built_in">NSException</span> new];</span><br><span class="line">        [ex2 raise];  <span class="comment">// this throws an exception, too</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="二、Cocoa"><a href="#二、Cocoa" class="headerlink" title="二、Cocoa"></a>二、Cocoa</h3><h5 id="18-missing-hash-method"><a href="#18-missing-hash-method" class="headerlink" title="18. missing hash method"></a>18. missing hash method</h5><p>当重写 isEqual 方法时，也必须重写 hash 方法</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">BaseObject</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="built_in">BOOL</span>)isEqual:(<span class="keyword">id</span>)obj &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">- (int)hash is missing; If you override isEqual you must override hash too.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+
+<h5 id="19-missing-call-to-base-method"><a href="#19-missing-call-to-base-method" class="headerlink" title="19. missing call to base method"></a>19. missing call to base method</h5><p>当使用 <strong>attribute</strong>((annotate(“oclint:enforce[must call super]”))) 注解时一个方法时, 他的所有实现（包括他自己和子类）都必须调用超类的实现方法。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">UIView</span> (<span class="title">OCLintStaticChecks</span>)</span></span><br><span class="line">- (<span class="keyword">void</span>)layoutSubviews __attribute__((annotate(<span class="string">&quot;oclint:enforce[base method]&quot;</span>)));</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">CustomView</span> : <span class="title">UIView</span></span></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">CustomView</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)layoutSubviews &#123;</span><br><span class="line">    <span class="comment">// [super layoutSubviews]; is enforced here</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+
+<h5 id="20-calling-prohibited-method"><a href="#20-calling-prohibited-method" class="headerlink" title="20. calling prohibited method"></a>20. calling prohibited method</h5><p>当一个方式使用__attribute__((annotate(“oclint:enforce[prohibited method]”))) 注解时, 它的所有用法都将被禁止。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">A</span> : <span class="title">NSObject</span></span></span><br><span class="line">- (<span class="keyword">void</span>)foo __attribute__((annotate(<span class="string">&quot;oclint:enforce[prohibited method]&quot;</span>)));</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">A</span></span></span><br><span class="line">- (<span class="keyword">void</span>)foo &#123;</span><br><span class="line">&#125;</span><br><span class="line">- (<span class="keyword">void</span>)bar &#123;</span><br><span class="line">    [<span class="keyword">self</span> foo]; <span class="comment">// calling method `foo` is prohibited.</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="21-calling-protected-method"><a href="#21-calling-protected-method" class="headerlink" title="21. calling protected method"></a>21. calling protected method</h5><p>在 Objective-C 中虽然没有 protected 这个作用范围概念。但在设计的角度，我们有时候希望一个方法只被它自己或者它的子类调用。下面示例中这个方法可以模仿 protected，在有人调用保护方法的时候给出一个警告。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">A</span> : <span class="title">NSObject</span></span></span><br><span class="line">- (<span class="keyword">void</span>)foo __attribute__((annotate(<span class="string">&quot;oclint:enforce[protected method]&quot;</span>)));</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">B</span> : <span class="title">NSObject</span></span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">strong</span>, <span class="keyword">nonatomic</span>) A* a;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">B</span></span></span><br><span class="line">- (<span class="keyword">void</span>)bar &#123;</span><br><span class="line">    [<span class="keyword">self</span>.a foo]; <span class="comment">// calling protected method foo from outside A and its subclasses</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="22-missing-abstract-method-implementation"><a href="#22-missing-abstract-method-implementation" class="headerlink" title="22. missing abstract method implementation"></a>22. missing abstract method implementation</h5><p>由于 Objective-C 的 runtime 特性，决策尽可能推迟到运行时，所以抽象方法可以被声明，但是没有被实现，该规则用来验证子类是否正确实现抽象方法。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Parent</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)anAbstractMethod __attribute__((annotate(<span class="string">&quot;oclint:enforce[abstract method]&quot;</span>)));</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Child</span> : <span class="title">Parent</span></span></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Child</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">// Child, as a subclass of Parent, must implement anAbstractMethod</span></span><br><span class="line"><span class="comment">- (void)anAbstractMethod &#123;&#125;</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>PS：抽象类的实现： 1.定义协议   2. 抽象类实现协议，实现方法直接抛异常  3. 子类继承抽象类 （如果子类不重写父类的方法，方法调用时就会去父类找，然后直接崩溃）</strong></p>
+<h3 id="三、Convention"><a href="#三、Convention" class="headerlink" title="三、Convention"></a>三、Convention</h3><h5 id="23-avoid-branching-statement-as-last-in-loop"><a href="#23-avoid-branching-statement-as-last-in-loop" class="headerlink" title="23.avoid branching statement as last in loop"></a>23.avoid branching statement as last in loop</h5><p>在循环中使用分支语句作为最后一个语句是非常令人困惑的，并且可能很大程度上会忘记一些东西从而导致bug。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> example()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (foo(i))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>; <span class="comment">// this break is confusing</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="24-base-class-destructor-should-be-virtual-or-protected"><a href="#24-base-class-destructor-should-be-virtual-or-protected" class="headerlink" title="24. base class destructor should be virtual or protected"></a>24. base class destructor should be virtual or protected</h5><p>基类的析构函数需要是 public、virtual 或者 protected、nonvirtual。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Base</span><br><span class="line">&#123;</span><br><span class="line">public:</span><br><span class="line">    ~Base(); <span class="comment">// this should be either protected or virtual</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> C : public Base</span><br><span class="line">&#123;</span><br><span class="line">    virtual ~C();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="25-unnecessary-default-statement-in-covered-switch-statement"><a href="#25-unnecessary-default-statement-in-covered-switch-statement" class="headerlink" title="25. unnecessary default statement in covered switch statement"></a>25. unnecessary default statement in covered switch statement</h5><p>当 switch 语句覆盖所有可能的情况时，不需要 default 标签，应该删除它。如果 switch 语句没有完全覆盖所有情况，SwitchStatementsShouldHaveDefault 规则将检测出这种情况</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">enum</span> &#123;</span><br><span class="line">    value1 = <span class="number">0</span>,</span><br><span class="line">    value2 = <span class="number">1</span></span><br><span class="line">&#125; eValues;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> aMethod(eValues a)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">switch</span>(a)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">case</span> value1:</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> value2:</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>: <span class="comment">// this break is obsolete because all</span></span><br><span class="line">            <span class="keyword">break</span>; <span class="comment">// values of variable a are already covered.</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="24-ill-placed-default-label-in-switch-statement"><a href="#24-ill-placed-default-label-in-switch-statement" class="headerlink" title="24. ill-placed default label in switch statement"></a>24. ill-placed default label in switch statement</h5><p>switch 语句中 default 标签不要乱放位置，应该放在最后一个分支位置。</p>
+<h5 id="25-destructor-of-virtual-class"><a href="#25-destructor-of-virtual-class" class="headerlink" title="25. destructor of virtual class"></a>25. destructor of virtual class</h5><p>虚拟类的析构函数必须是虚拟的。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span> &#123;</span> <span class="comment">// class Base should have a virtual destructor ~Base()</span></span><br><span class="line">    <span class="keyword">public</span>: <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">f</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Child</span> :</span> <span class="keyword">public</span> Base &#123;</span><br><span class="line">    <span class="keyword">public</span>: ~Child();  <span class="comment">// destructor ~Child() should be virtual</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h5 id="26-inverted-logic"><a href="#26-inverted-logic" class="headerlink" title="26. inverted logic"></a>26. inverted logic</h5><p>颠倒的逻辑不易理解，做逻辑判断的时候，最好先做 true 判断，再做 false 判断。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">example</span><span class="params">(<span class="keyword">int</span> a)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">if</span> (a != <span class="number">0</span>)             <span class="comment">// if (a == 0)</span></span><br><span class="line">    &#123;                       <span class="comment">// &#123;</span></span><br><span class="line">        i = <span class="number">1</span>;              <span class="comment">//      i = 0;</span></span><br><span class="line">    &#125;                       <span class="comment">// &#125;</span></span><br><span class="line">    <span class="keyword">else</span>                    <span class="comment">// else</span></span><br><span class="line">    &#123;                       <span class="comment">// &#123;</span></span><br><span class="line">        i = <span class="number">0</span>;              <span class="comment">//      i = 1;</span></span><br><span class="line">    &#125;                       <span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> !i ? <span class="number">-1</span> : <span class="number">1</span>;     <span class="comment">// return i ? 1 : -1;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h5 id="27-missing-break-in-switch-statement"><a href="#27-missing-break-in-switch-statement" class="headerlink" title="27. missing break in switch statement"></a>27. missing break in switch statement</h5><p>switch 语句中缺失了 break，很大可能引发bug。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> example(<span class="keyword">int</span> a)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">switch</span> (a) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">            <span class="comment">// do something</span></span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="28-non-case-label-in-switch-statement"><a href="#28-non-case-label-in-switch-statement" class="headerlink" title="28. non case label in switch statement"></a>28. non case label in switch statement</h5><p>当 label 成为 switch 语句的一部分时，这是非常令人困惑的。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">void</span> example(<span class="keyword">int</span> a)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">switch</span> (a) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        label1:     <span class="comment">// label in a switch statement in really confusing</span></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h5 id="29-ivar-assignment-outside-accessors-or-init"><a href="#29-ivar-assignment-outside-accessors-or-init" class="headerlink" title="29.  ivar assignment outside accessors or init"></a>29.  ivar assignment outside accessors or init</h5><p>此规则禁止在 getter、setter 和 init 方法之外赋值 ivar。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Foo</span> : <span class="title">NSObject</span></span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> _bar;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">assign</span>, <span class="keyword">nonatomic</span>) <span class="keyword">int</span> bar;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Foo</span></span></span><br><span class="line"><span class="keyword">@synthesize</span> bar = _bar;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)doSomething &#123;</span><br><span class="line">    _bar = <span class="number">3</span>; <span class="comment">// access _bar outside its getter, setter or init</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+
+<h5 id="30-parameter-reassignment"><a href="#30-parameter-reassignment" class="headerlink" title="30. parameter reassignment"></a>30. parameter reassignment</h5><p>在大多数情况下，请不要对参数从新赋值直接使用，如果参数是指针，对指针重新赋值是可以的。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> example(<span class="keyword">int</span> a)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (a &lt; <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        a = <span class="number">0</span>; <span class="comment">// reassign parameter a to 0</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h5 id="31-prefer-early-exits-and-continue"><a href="#31-prefer-early-exits-and-continue" class="headerlink" title="31. prefer early exits and continue"></a>31. prefer early exits and continue</h5><p>做更早的逻辑退出判断，这样就不用记住所有的条件，更容易理解代码。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> *doSomething(<span class="keyword">int</span> a) &#123;</span><br><span class="line">  <span class="keyword">if</span> (!foo(a) &amp;&amp; bar(a) &amp;&amp; doOtherThing(a)) &#123;</span><br><span class="line">    <span class="comment">// ... some really long code ....</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// is preferred as</span></span><br><span class="line"><span class="keyword">int</span> *doSomething(<span class="keyword">int</span> a) &#123;</span><br><span class="line">  <span class="keyword">if</span> (foo(a)) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (!bar(a)) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (!doOtherThing(a)) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// ... some long code ....</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="32-missing-default-in-switch-statements"><a href="#32-missing-default-in-switch-statements" class="headerlink" title="32. missing default in switch statements"></a>32. missing default in switch statements</h5><p>switch 语句应该有一个 default 语句。</p>
+<p>？？？？</p>
+<h5 id="33-too-few-branches-in-switch-statement"><a href="#33-too-few-branches-in-switch-statement" class="headerlink" title="33. too few branches in switch statement"></a>33. too few branches in switch statement</h5><p>为了提高代码可读性，当一个 switch 只包含几个分支时，最好使用 if 语句代替。</p>
+<h5 id="34-avoid-default-arguments-on-virtual-methods"><a href="#34-avoid-default-arguments-on-virtual-methods" class="headerlink" title="34. avoid default arguments on virtual methods"></a>34. avoid default arguments on virtual methods</h5><p>避免给虚函数设置默认参数，给虚函数设置默认参数会破坏多样性和引起不必要的层次结构复杂性。</p>
+<h5 id="35-avoid-private-static-members"><a href="#35-avoid-private-static-members" class="headerlink" title="35. avoid private static members"></a>35. avoid private static members</h5><p>避免使用私有静态成员，静态成员很容易破换封装性。</p>
+<h5 id="36-empty-catch-statement"><a href="#36-empty-catch-statement" class="headerlink" title="36. empty catch statement"></a>36. empty catch statement</h5><p>捕捉了异常，但任何处理都没做。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> example()</span><br><span class="line">&#123;</span><br><span class="line">    try</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span>* m= new <span class="keyword">int</span>[<span class="number">1000</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    catch(...)  <span class="comment">// empty catch statement, this swallows an exception</span></span><br><span class="line">    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="37-empty-do-while-statement"><a href="#37-empty-do-while-statement" class="headerlink" title="37. empty do/while statement"></a>37. empty do/while statement</h5><p>do-while 语句内不执行任何操作。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> example()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">do</span></span><br><span class="line">    &#123;   <span class="comment">// empty do-while statement</span></span><br><span class="line">    &#125; <span class="keyword">while</span>(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="38-empty-else-block"><a href="#38-empty-else-block" class="headerlink" title="38. empty else block"></a>38. empty else block</h5><p>else 语句不执行任何操作。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> example(<span class="keyword">int</span> a)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> a + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>  <span class="comment">// empty else statement, can be safely removed</span></span><br><span class="line">    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="39-empty-finally-statement"><a href="#39-empty-finally-statement" class="headerlink" title="39. empty finally statement"></a>39. empty finally statement</h5><p>finally 语句不执行任何操作。</p>
+<h5 id="40-empty-for-statement"><a href="#40-empty-for-statement" class="headerlink" title="40. empty for statement"></a>40. empty for statement</h5><p>for 语句不执行任何操作。</p>
+<h5 id="41-empty-if-statement"><a href="#41-empty-if-statement" class="headerlink" title="41. empty if statement"></a>41. empty if statement</h5><p>做了条件判断但是没做任何操作。</p>
+<h5 id="42-empty-switch-statement"><a href="#42-empty-switch-statement" class="headerlink" title="42. empty switch statement"></a>42. empty switch statement</h5><p>switch 语句不执行任何操作。</p>
+<h5 id="43-empty-try-statement"><a href="#43-empty-try-statement" class="headerlink" title="43. empty try statement"></a>43. empty try statement</h5><p>try 语句为空</p>
+<h5 id="44-empty-while-statement"><a href="#44-empty-while-statement" class="headerlink" title="44. empty while statement"></a>44. empty while statement</h5><p>while 语句不执行任何操作。</p>
+<h3 id="四、Migration"><a href="#四、Migration" class="headerlink" title="四、Migration"></a>四、Migration</h3><h5 id="45-use-container-literal"><a href="#45-use-container-literal" class="headerlink" title="45. use container literal"></a>45. use container literal</h5><p>使用字面量语法创建数组和字典</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> aMethod()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSArray</span> *a = [<span class="built_in">NSArray</span> arrayWithObjects:@<span class="number">1</span>, @<span class="number">2</span>, @<span class="number">3</span>, <span class="literal">nil</span>];</span><br><span class="line">    <span class="comment">// NSArray *a = @[ @1, @2, @3 ];</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSDictionary</span> *d = [<span class="built_in">NSDictionary</span> dictionaryWithObjects:@[@<span class="number">2</span>,@<span class="number">4</span>] forKeys:@[@<span class="number">1</span>,@<span class="number">3</span>]];</span><br><span class="line">    <span class="comment">// NSDictionary *d = @&#123; @1 : @2, @3 : @4 &#125;;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h5 id="46-use-number-literal"><a href="#46-use-number-literal" class="headerlink" title="46. use number literal"></a>46. use number literal</h5><p>使用字面量语法创建 NSNumber</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> aMethod()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSNumber</span> *fortyTwo = [<span class="built_in">NSNumber</span> numberWithInt:<span class="number">42</span>];</span><br><span class="line">    <span class="comment">// NSNumber *fortyTwo = @42;</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSNumber</span> *yesBool = [<span class="built_in">NSNumber</span> numberWithBool:<span class="literal">YES</span>];</span><br><span class="line">    <span class="comment">// NSNumber *yesBool = @YES;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="47-use-object-subscripting"><a href="#47-use-object-subscripting" class="headerlink" title="47. use object subscripting"></a>47. use object subscripting</h5><p>使用字面量语法获取数组指定索引对象或者获取字典指定key的value</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> aMethod(<span class="built_in">NSArray</span> *a, <span class="built_in">NSDictionary</span> *d)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">id</span> item = [a objectAtIndex:<span class="number">0</span>];</span><br><span class="line">    <span class="comment">// id item = a[0];</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">id</span> item = [d objectForKey:@<span class="number">1</span>];</span><br><span class="line">    <span class="comment">// id item = d[@1];</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="五、Naming"><a href="#五、Naming" class="headerlink" title="五、Naming"></a>五、Naming</h3><h5 id="48-long-variable-name"><a href="#48-long-variable-name" class="headerlink" title="48.  long variable name"></a>48.  long variable name</h5><p>变量名称太长</p>
+<p>LONG_VARIABLE_NAME<br>长变量名报告阈值，默认值为20。</p>
+<h5 id="49-short-variable-name"><a href="#49-short-variable-name" class="headerlink" title="49. short variable name"></a>49. short variable name</h5><p>变量名称太短</p>
+<p>Thresholds:<br>SHORT_VARIABLE_NAME<br>短变量名称报告阈值，默认值为3。</p>
+<h5 id="50-redundant-conditional-operator"><a href="#50-redundant-conditional-operator" class="headerlink" title="50. redundant conditional operator"></a>50. redundant conditional operator</h5><p>此规则检测三种类型的冗余条件运算符:</p>
+<ul>
+<li>true 表达式和f alse 表达式分别返回 true/false 和 false/true;</li>
+<li>true 表达式和 false 表达式是相同的常数;</li>
+<li>true 表达式和 false 表达式是同一个变量表达式;</li>
+</ul>
+<p>应该加以简化。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> example(<span class="keyword">int</span> a, <span class="keyword">int</span> b, <span class="keyword">int</span> c)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">bool</span> b1 = a &gt; b ? <span class="literal">true</span> : <span class="literal">false</span>;     <span class="comment">// true/false: bool b1 = a &gt; b;</span></span><br><span class="line">    <span class="keyword">bool</span> b2 = a &gt; b ? <span class="literal">false</span> : <span class="literal">true</span>;     <span class="comment">// false/true: bool b2 = !(a &gt; b);</span></span><br><span class="line">    <span class="keyword">int</span> i1 = a &gt; b ? <span class="number">1</span> : <span class="number">1</span>;             <span class="comment">// same constant: int i1 = 1;</span></span><br><span class="line">    <span class="keyword">float</span> f1 = a &gt; b ? <span class="number">1.0</span> : <span class="number">1.00</span>;      <span class="comment">// equally constant: float f1 = 1.0;</span></span><br><span class="line">    <span class="keyword">int</span> i2 = a &gt; b ? c : c;             <span class="comment">// same variable: int i2 = c;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="51-redundant-if-statement"><a href="#51-redundant-if-statement" class="headerlink" title="51. redundant if statement"></a>51. redundant if statement</h5><p>不必要的 if 语句</p>
+<h5 id="52-redundant-local-variable"><a href="#52-redundant-local-variable" class="headerlink" title="52. redundant local variable"></a>52. redundant local variable</h5><p>变量声明之后立即返回该变量，变量声明可以省略，直接尾调返回</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> example(<span class="keyword">int</span> a)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> b = a * <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">return</span> b; <span class="comment">// variable b is returned immediately after its declaration,</span></span><br><span class="line">&#125; <span class="comment">// can be simplified to return a * 2;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="53-redundant-nil-check"><a href="#53-redundant-nil-check" class="headerlink" title="53. redundant nil check"></a>53. redundant nil check</h5><p>在Objective-C中，像foo != nil &amp;&amp; [foo bar]这样的 c/c++风格的null检查是多余的，因为在这种情况下，向nil对象发送消息只会返回false。</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">+ (<span class="keyword">void</span>)compare:(A *)obj1 withOther:(A *)obj2</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (obj1 &amp;&amp; [obj1 isEqualTo:obj2]) <span class="comment">// if ([obj1 isEqualTo:obj2]) is okay</span></span><br><span class="line">    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="54-unnecessary-else-statement"><a href="#54-unnecessary-else-statement" class="headerlink" title="54. unnecessary else statement"></a>54. unnecessary else statement</h5><p>如果一个 if 语句块以一个 return 语句结束，或者 if 语句块中的所有分支都以 return 语句结束，那么 else 语句就没有必要了，else 语句中的代码可以在不位于块中的情况下运行。</p>
+<h5 id="55-unnecessary-null-check-for-dealloc"><a href="#55-unnecessary-null-check-for-dealloc" class="headerlink" title="55.unnecessary null check for dealloc"></a>55.unnecessary null check for dealloc</h5><p>不必要的判空检查，在 dealloc 中 char* p = 0; delete p; 是有效的。</p>
+<h5 id="56-useless-parentheses"><a href="#56-useless-parentheses" class="headerlink" title="56. useless parentheses"></a>56. useless parentheses</h5><p>无用的括号。</p>
+<h3 id="六、-Size"><a href="#六、-Size" class="headerlink" title="六、 Size"></a>六、 Size</h3><h5 id="57-high-cyclomatic-complexity"><a href="#57-high-cyclomatic-complexity" class="headerlink" title="57. high cyclomatic complexity"></a>57. high cyclomatic complexity</h5><p>圈复杂度由程序源代码中线性无关路径的数量决定。换句话说，方法的圈复杂度是由决策点的数量来度量的，比如 if、while 和 for 语句的数量，以及方法条目的数量。</p>
+<p>圈复杂度的作者 McCabe 通过实验得出结论，复杂度在 3 到 7 之间的方法结构会非常好。他还建议圈复杂度为 10 是一个合理的上限。</p>
+<h5 id="58-long-class"><a href="#58-long-class" class="headerlink" title="58.  long class"></a>58.  long class</h5><p>类代码行数过多</p>
+<p>Thresholds:<br>LONG_CLASS<br>类大小报告阈值，默认值为1000</p>
+<h5 id="59-LongLine"><a href="#59-LongLine" class="headerlink" title="59. LongLine"></a>59. LongLine</h5><p>单行代码太长，影响可读性，应该折行</p>
+<p>Thresholds:<br>LONG_LINE<br>长行报告阈值，默认值为100。</p>
+<h5 id="60-long-method"><a href="#60-long-method" class="headerlink" title="60. long method"></a>60. long method</h5><p>单个方法中代码行数太多</p>
+<p>Thresholds:<br>LONG_METHOD<br>长方法报告阈值，默认值为50。</p>
+<h5 id="61-high-ncss-method"><a href="#61-high-ncss-method" class="headerlink" title="61. high ncss method"></a>61. high ncss method</h5><p>该规则通过计算非注释源语句(NCSS)来计算方法的行数。NCSS 只考虑实际语句，即忽略空语句、空块、右括号或右括号后的分号。与此同时，被分成多行的语句只贡献一个计数。</p>
+<p>Thresholds:</p>
+<p>NCSS_METHOD<br>高NCSS方法报告阈值，默认值为30。</p>
+<h5 id="62-deep-nested-block"><a href="#62-deep-nested-block" class="headerlink" title="62. deep nested block"></a>62. deep nested block</h5><p>块或复合语句嵌套深度太大。</p>
+<p>Thresholds:</p>
+<p>NESTED_BLOCK_DEPTH<br>块或复合语句的深度报告阈值，默认值为5。</p>
+<h5 id="63-high-npath-complexity"><a href="#63-high-npath-complexity" class="headerlink" title="63. high npath complexity"></a>63. high npath complexity</h5><p>NPath 复杂度由该方法的执行路径数量决定。与圈复杂度相比，NPath复杂度有两个突出特点:一是区分了不同类型的控制流结构；其次，它考虑流图中各种类型的非循环路径。</p>
+<p>基于作者在AT&amp;T贝尔实验室的研究，建立了一种 NPath 阈值为 200 的方法。</p>
+<h5 id="64-too-many-fields"><a href="#64-too-many-fields" class="headerlink" title="64. too many fields"></a>64. too many fields</h5><p>字段太多的类表示它做的事情太多，缺乏适当的抽象，可以将其重新设计得字段更少。</p>
+<p>Thresholds:</p>
+<p>TOO_MANY_FIELDS<br>对于太多字段的报告阈值，默认值为20。</p>
+<h5 id="65-too-many-methods"><a href="#65-too-many-methods" class="headerlink" title="65. too many methods"></a>65. too many methods</h5><p>方法太多的类表示它做的事情太多，很难阅读和理解，它通常包含复杂的代码，应该重构。</p>
+<h5 id="66-too-many-parameters"><a href="#66-too-many-parameters" class="headerlink" title="66.  too many parameters"></a>66.  too many parameters</h5><p>参数太多的方法很难理解和维护，需要重构。比如用方法替换参数、引入参数对象或保存整个对象。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">example</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b, <span class="keyword">int</span> c, <span class="keyword">int</span> d, <span class="keyword">int</span> e, <span class="keyword">int</span> f,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">int</span> g, <span class="keyword">int</span> h, <span class="keyword">int</span> i, <span class="keyword">int</span> j, <span class="keyword">int</span> k, <span class="keyword">int</span> l)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="七、Unused"><a href="#七、Unused" class="headerlink" title="七、Unused"></a>七、Unused</h3><h5 id="67-unused-local-variable"><a href="#67-unused-local-variable" class="headerlink" title="67. unused local variable"></a>67. unused local variable</h5><p>声明但未使用的局部变量。</p>
+<h5 id="68-unused-method-parameter"><a href="#68-unused-method-parameter" class="headerlink" title="68. unused method parameter"></a>68. unused method parameter</h5><p>方法中未使用的参数。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/02/15/ARM64%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A8%E4%B8%80/" rel="prev" title="ARM64汇编入门一">
+      <i class="fa fa-chevron-left"></i> ARM64汇编入门一
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/03/15/%E5%9F%BA%E4%BA%8EJSCore%E7%9A%84%E5%8A%A8%E6%80%81%E5%8C%96Demo/" rel="next" title="基于JSCore的动态化Demo">
+      基于JSCore的动态化Demo <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81Basic"><span class="nav-text">一、Basic</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-bitwise-operator-in-conditional-%E6%9D%A1%E4%BB%B6%E8%AF%AD%E5%8F%A5%E4%B8%AD%E7%9A%84%E4%BD%8D%E8%BF%90%E7%AE%97"><span class="nav-text">1. bitwise operator in conditional 条件语句中的位运算</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-broken-null-check"><span class="nav-text">2. broken null check</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-broken-nil-check"><span class="nav-text">3. broken nil check</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-broken-oddness-check"><span class="nav-text">4. broken oddness check</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-collapsible-if-statements"><span class="nav-text">5. collapsible if statements</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#6-constant-conditional-operator"><span class="nav-text">6. constant conditional operator</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7-constant-if-expression"><span class="nav-text">7. constant if expression</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#8-dead-code"><span class="nav-text">8. dead code</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#9-double-negative"><span class="nav-text">9. double negative</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#10-for-loop-should-be-while-loop"><span class="nav-text">10. for loop should be while loop</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#11-goto-statement"><span class="nav-text">11. goto statement</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#12-jumbled-incrementer"><span class="nav-text">12. jumbled incrementer</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#13-misplaced-null-check"><span class="nav-text">13. misplaced null check</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#14-misplaced-nil-check"><span class="nav-text">14. misplaced nil check</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#15-multiple-unary-operator"><span class="nav-text">15. multiple unary operator</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#16-return-from-finally-block"><span class="nav-text">16. return from finally block</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#17-throw-exception-from-finally-block"><span class="nav-text">17. throw exception from finally block</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E3%80%81Cocoa"><span class="nav-text">二、Cocoa</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#18-missing-hash-method"><span class="nav-text">18. missing hash method</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#19-missing-call-to-base-method"><span class="nav-text">19. missing call to base method</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#20-calling-prohibited-method"><span class="nav-text">20. calling prohibited method</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#21-calling-protected-method"><span class="nav-text">21. calling protected method</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#22-missing-abstract-method-implementation"><span class="nav-text">22. missing abstract method implementation</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E3%80%81Convention"><span class="nav-text">三、Convention</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#23-avoid-branching-statement-as-last-in-loop"><span class="nav-text">23.avoid branching statement as last in loop</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#24-base-class-destructor-should-be-virtual-or-protected"><span class="nav-text">24. base class destructor should be virtual or protected</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#25-unnecessary-default-statement-in-covered-switch-statement"><span class="nav-text">25. unnecessary default statement in covered switch statement</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#24-ill-placed-default-label-in-switch-statement"><span class="nav-text">24. ill-placed default label in switch statement</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#25-destructor-of-virtual-class"><span class="nav-text">25. destructor of virtual class</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#26-inverted-logic"><span class="nav-text">26. inverted logic</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#27-missing-break-in-switch-statement"><span class="nav-text">27. missing break in switch statement</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#28-non-case-label-in-switch-statement"><span class="nav-text">28. non case label in switch statement</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#29-ivar-assignment-outside-accessors-or-init"><span class="nav-text">29.  ivar assignment outside accessors or init</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#30-parameter-reassignment"><span class="nav-text">30. parameter reassignment</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#31-prefer-early-exits-and-continue"><span class="nav-text">31. prefer early exits and continue</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#32-missing-default-in-switch-statements"><span class="nav-text">32. missing default in switch statements</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#33-too-few-branches-in-switch-statement"><span class="nav-text">33. too few branches in switch statement</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#34-avoid-default-arguments-on-virtual-methods"><span class="nav-text">34. avoid default arguments on virtual methods</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#35-avoid-private-static-members"><span class="nav-text">35. avoid private static members</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#36-empty-catch-statement"><span class="nav-text">36. empty catch statement</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#37-empty-do-while-statement"><span class="nav-text">37. empty do&#x2F;while statement</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#38-empty-else-block"><span class="nav-text">38. empty else block</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#39-empty-finally-statement"><span class="nav-text">39. empty finally statement</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#40-empty-for-statement"><span class="nav-text">40. empty for statement</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#41-empty-if-statement"><span class="nav-text">41. empty if statement</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#42-empty-switch-statement"><span class="nav-text">42. empty switch statement</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#43-empty-try-statement"><span class="nav-text">43. empty try statement</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#44-empty-while-statement"><span class="nav-text">44. empty while statement</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9B%E3%80%81Migration"><span class="nav-text">四、Migration</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#45-use-container-literal"><span class="nav-text">45. use container literal</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#46-use-number-literal"><span class="nav-text">46. use number literal</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#47-use-object-subscripting"><span class="nav-text">47. use object subscripting</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%94%E3%80%81Naming"><span class="nav-text">五、Naming</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#48-long-variable-name"><span class="nav-text">48.  long variable name</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#49-short-variable-name"><span class="nav-text">49. short variable name</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#50-redundant-conditional-operator"><span class="nav-text">50. redundant conditional operator</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#51-redundant-if-statement"><span class="nav-text">51. redundant if statement</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#52-redundant-local-variable"><span class="nav-text">52. redundant local variable</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#53-redundant-nil-check"><span class="nav-text">53. redundant nil check</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#54-unnecessary-else-statement"><span class="nav-text">54. unnecessary else statement</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#55-unnecessary-null-check-for-dealloc"><span class="nav-text">55.unnecessary null check for dealloc</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#56-useless-parentheses"><span class="nav-text">56. useless parentheses</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AD%E3%80%81-Size"><span class="nav-text">六、 Size</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#57-high-cyclomatic-complexity"><span class="nav-text">57. high cyclomatic complexity</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#58-long-class"><span class="nav-text">58.  long class</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#59-LongLine"><span class="nav-text">59. LongLine</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#60-long-method"><span class="nav-text">60. long method</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#61-high-ncss-method"><span class="nav-text">61. high ncss method</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#62-deep-nested-block"><span class="nav-text">62. deep nested block</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#63-high-npath-complexity"><span class="nav-text">63. high npath complexity</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#64-too-many-fields"><span class="nav-text">64. too many fields</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#65-too-many-methods"><span class="nav-text">65. too many methods</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#66-too-many-parameters"><span class="nav-text">66.  too many parameters</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%83%E3%80%81Unused"><span class="nav-text">七、Unused</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#67-unused-local-variable"><span class="nav-text">67. unused local variable</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#68-unused-method-parameter"><span class="nav-text">68. unused method parameter</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Loiszad"
+      src="/images/IMG_0167.JPG">
+  <p class="site-author-name" itemprop="name">Loiszad</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2013 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Loiszad</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

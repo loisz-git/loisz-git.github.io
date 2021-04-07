@@ -159,7 +159,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/04/06/ARM64%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A8%E4%B8%80/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/03/15/%E5%9F%BA%E4%BA%8EJSCore%E7%9A%84%E5%8A%A8%E6%80%81%E5%8C%96Demo/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/IMG_0167.JPG">
@@ -173,7 +173,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/04/06/ARM64%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A8%E4%B8%80/" class="post-title-link" itemprop="url">ARM64汇编入门一</a>
+            <a href="/2021/03/15/%E5%9F%BA%E4%BA%8EJSCore%E7%9A%84%E5%8A%A8%E6%80%81%E5%8C%96Demo/" class="post-title-link" itemprop="url">基于JSCore的动态化Demo</a>
         </h2>
 
         <div class="post-meta">
@@ -183,7 +183,139 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2021-04-06 11:58:48" itemprop="dateCreated datePublished" datetime="2021-04-06T11:58:48+08:00">2021-04-06</time>
+              <time title="创建时间：2021-03-15 09:10:02" itemprop="dateCreated datePublished" datetime="2021-03-15T09:10:02+08:00">2021-03-15</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="1-崩溃案例"><a href="#1-崩溃案例" class="headerlink" title="1. 崩溃案例"></a>1. 崩溃案例</h3><p>原生中调用如下，传0会崩溃</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">MightyCrash *mc = [[MightyCrash alloc] init];</span><br><span class="line">[mc divideUsingDenominator: <span class="number">0</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">//MightyCrash的divideUsingDenominator方法定义</span></span><br><span class="line">- (<span class="keyword">float</span>)divideUsingDenominator:(<span class="built_in">NSInteger</span>)denominator &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1.</span>f / denominator;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/03/15/%E5%9F%BA%E4%BA%8EJSCore%E7%9A%84%E5%8A%A8%E6%80%81%E5%8C%96Demo/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/03/12/OCLint%E9%BB%98%E8%AE%A4%E7%9A%8471%E4%B8%AA%E8%A7%84%E5%88%99/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/IMG_0167.JPG">
+      <meta itemprop="name" content="Loiszad">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="郁闷的不行">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/03/12/OCLint%E9%BB%98%E8%AE%A4%E7%9A%8471%E4%B8%AA%E8%A7%84%E5%88%99/" class="post-title-link" itemprop="url">OCLint默认的71个规则</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-03-12 08:58:22" itemprop="dateCreated datePublished" datetime="2021-03-12T08:58:22+08:00">2021-03-12</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="一、Basic"><a href="#一、Basic" class="headerlink" title="一、Basic"></a>一、Basic</h3><h5 id="1-bitwise-operator-in-conditional-条件语句中的位运算"><a href="#1-bitwise-operator-in-conditional-条件语句中的位运算" class="headerlink" title="1. bitwise operator in conditional 条件语句中的位运算"></a>1. bitwise operator in conditional 条件语句中的位运算</h5><p>简单解释：OCLint认为位运算符可读性不好</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">void example(int a, int b) &#123;</span><br><span class="line">    if (a | b) &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    if (a &amp; b) &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/03/12/OCLint%E9%BB%98%E8%AE%A4%E7%9A%8471%E4%B8%AA%E8%A7%84%E5%88%99/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/02/15/ARM64%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A8%E4%B8%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/IMG_0167.JPG">
+      <meta itemprop="name" content="Loiszad">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="郁闷的不行">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/02/15/ARM64%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A8%E4%B8%80/" class="post-title-link" itemprop="url">ARM64汇编入门一</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-02-15 11:58:48" itemprop="dateCreated datePublished" datetime="2021-02-15T11:58:48+08:00">2021-02-15</time>
             </span>
 
           
@@ -202,7 +334,7 @@
 </ul>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/04/06/ARM64%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A8%E4%B8%80/#more" rel="contents">
+              <a class="btn" href="/2021/02/15/ARM64%E6%B1%87%E7%BC%96%E5%85%A5%E9%97%A8%E4%B8%80/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -685,139 +817,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/07/20/android-intent-filter-%E4%B9%8B-data%E5%B1%9E%E6%80%A7/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/IMG_0167.JPG">
-      <meta itemprop="name" content="Loiszad">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="郁闷的不行">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2015/07/20/android-intent-filter-%E4%B9%8B-data%E5%B1%9E%E6%80%A7/" class="post-title-link" itemprop="url">android intent-filter  之 data属性</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2015-07-20 16:34:40" itemprop="dateCreated datePublished" datetime="2015-07-20T16:34:40+08:00">2015-07-20</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>android 程序中可以通过设置scheme，实现在其他程序（eg. browser中点击此scheme的link）来直接打开程序， 或直接打开程序的某个activity。介绍如下：</p>
-<p>在androidmanifest中想要启动的activity标签下加入：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;intent-filter&gt;</span><br><span class="line">    &lt;action android:name=<span class="string">&quot;android.intent.action.VIEW&quot;</span> /&gt;</span><br><span class="line">    &lt;category android:name=<span class="string">&quot;android.intent.category.DEFAULT&quot;</span> /&gt;</span><br><span class="line">    &lt;category android:name=<span class="string">&quot;android.intent.category.BROWSABLE&quot;</span> /&gt;</span><br><span class="line">    &lt;data android:scheme=<span class="string">&quot;myscheme&quot;</span> /&gt;</span><br><span class="line">&lt;/intent-filter&gt;</span><br></pre></td></tr></table></figure>
-<p>这样在browser中点击link  （<a target="_blank" rel="noopener" href="http://myscheme)时就可以打开程序./">http://myscheme）时就可以打开程序。</a></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2015/07/20/android-intent-filter-%E4%B9%8B-data%E5%B1%9E%E6%80%A7/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2014/08/13/C8%E5%AD%90%E8%BF%9B%E7%A8%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/IMG_0167.JPG">
-      <meta itemprop="name" content="Loiszad">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="郁闷的不行">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2014/08/13/C8%E5%AD%90%E8%BF%9B%E7%A8%8B/" class="post-title-link" itemprop="url">C8子进程</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2014-08-13 15:16:36" itemprop="dateCreated datePublished" datetime="2014-08-13T15:16:36+08:00">2014-08-13</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="fork在英文中是叉子，分叉的意思，在函数fork中，取后面的意思。很形象的表示程序从这里分叉，fork函数创建了子进程，子进程和父进程同时（其实是cpu分时处理）开始运行分叉之后的程序。"><a href="#fork在英文中是叉子，分叉的意思，在函数fork中，取后面的意思。很形象的表示程序从这里分叉，fork函数创建了子进程，子进程和父进程同时（其实是cpu分时处理）开始运行分叉之后的程序。" class="headerlink" title="fork在英文中是叉子，分叉的意思，在函数fork中，取后面的意思。很形象的表示程序从这里分叉，fork函数创建了子进程，子进程和父进程同时（其实是cpu分时处理）开始运行分叉之后的程序。"></a>fork在英文中是叉子，分叉的意思，在函数fork中，取后面的意思。很形象的表示程序从这里分叉，fork函数创建了子进程，子进程和父进程同时（其实是cpu分时处理）开始运行分叉之后的程序。</h3>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2014/08/13/C8%E5%AD%90%E8%BF%9B%E7%A8%8B/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -889,7 +888,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-count">27</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
