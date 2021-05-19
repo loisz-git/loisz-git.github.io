@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Consolas:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="1. 软键盘布局解释项目中，常用的软键盘弹出模式（windowSoftInputMode）有两种  adjustResize：布局高度压缩，腾出位置给键盘 adjustPan：键盘空间不够的时候，布局整体向上推，腾出位置给键盘  2. 原因分析键盘、面板的visible操作，触发了两次根布局的onMeasure、onLayout事件。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JKeyboardPanelSwitch键盘面板防抖方案">
+<meta property="og:url" content="http://yoursite.com/2021/05/19/JKeyboardPanelSwitch%E9%94%AE%E7%9B%98%E9%9D%A2%E6%9D%BF%E9%98%B2%E6%8A%96%E6%96%B9%E6%A1%88/index.html">
+<meta property="og:site_name" content="郁闷的不行">
+<meta property="og:description" content="1. 软键盘布局解释项目中，常用的软键盘弹出模式（windowSoftInputMode）有两种  adjustResize：布局高度压缩，腾出位置给键盘 adjustPan：键盘空间不够的时候，布局整体向上推，腾出位置给键盘  2. 原因分析键盘、面板的visible操作，触发了两次根布局的onMeasure、onLayout事件。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/05/19/g6JFQhrXk7G8Kai.jpg">
+<meta property="article:published_time" content="2021-05-19T06:30:33.000Z">
+<meta property="article:modified_time" content="2021-05-19T06:38:21.671Z">
+<meta property="article:author" content="Loiszad">
+<meta property="article:tag" content="Android">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/05/19/g6JFQhrXk7G8Kai.jpg">
+
+<link rel="canonical" href="http://yoursite.com/2021/05/19/JKeyboardPanelSwitch%E9%94%AE%E7%9B%98%E9%9D%A2%E6%9D%BF%E9%98%B2%E6%8A%96%E6%96%B9%E6%A1%88/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>JKeyboardPanelSwitch键盘面板防抖方案 | 郁闷的不行</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">郁闷的不行</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">踏歌长行，梦想永在 ~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/05/19/JKeyboardPanelSwitch%E9%94%AE%E7%9B%98%E9%9D%A2%E6%9D%BF%E9%98%B2%E6%8A%96%E6%96%B9%E6%A1%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/IMG_0167.JPG">
+      <meta itemprop="name" content="Loiszad">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="郁闷的不行">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JKeyboardPanelSwitch键盘面板防抖方案
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-05-19 14:30:33" itemprop="dateCreated datePublished" datetime="2021-05-19T14:30:33+08:00">2021-05-19</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h4 id="1-软键盘布局解释"><a href="#1-软键盘布局解释" class="headerlink" title="1. 软键盘布局解释"></a>1. 软键盘布局解释</h4><p>项目中，常用的软键盘弹出模式（windowSoftInputMode）有两种</p>
+<ul>
+<li>adjustResize：布局高度压缩，腾出位置给键盘</li>
+<li>adjustPan：键盘空间不够的时候，布局整体向上推，腾出位置给键盘</li>
+</ul>
+<h4 id="2-原因分析"><a href="#2-原因分析" class="headerlink" title="2. 原因分析"></a>2. 原因分析</h4><p>键盘、面板的visible操作，触发了两次根布局的onMeasure、onLayout事件。</p>
+<span id="more"></span>
+
+<h4 id="3-解决思路"><a href="#3-解决思路" class="headerlink" title="3.解决思路"></a>3.解决思路</h4><p>简单点说，界面切换平滑的前提：</p>
+<ol>
+<li>panel的显示、隐藏操作，不能引起重新测量、重新布局。</li>
+<li>panel的高度和键盘一致，这样切换面板，输入框的Y轴位置保持固定。</li>
+</ol>
+<p>下面，我们看JKeyboardPanelSwitch是如何解决闪动问题</p>
+<h6 id="1-避免重复onLayout方法"><a href="#1-避免重复onLayout方法" class="headerlink" title="1.避免重复onLayout方法"></a>1.避免重复onLayout方法</h6><p>根布局两次Layout的触发的原因</p>
+<p>在adjustResize情况下，键盘弹开、收起<br>位于面板容器visible状态改变，引起父容器重新测量</p>
+<h6 id="2-键盘、面板高度一致"><a href="#2-键盘、面板高度一致" class="headerlink" title="2.键盘、面板高度一致"></a>2.键盘、面板高度一致</h6><p>在监听根布局的时候，收缩、展开高度的差，经过计算，就是键盘的高度。把该高度赋值给面板，我们就能保证键盘、面板切换时，输入框在Y轴上的位置不变了。</p>
+<h4 id="4-JKeyboardPanelSwitch核心类分析"><a href="#4-JKeyboardPanelSwitch核心类分析" class="headerlink" title="4. JKeyboardPanelSwitch核心类分析"></a>4. JKeyboardPanelSwitch核心类分析</h4><p>JKeyboardPanelSwitch在布局上提供了两个容器</p>
+<ol>
+<li>根节点容器：通过布局高度的变化，计算出偏差值，得出键盘高度，通知面板显示、隐藏。</li>
+<li>面板容器：负责接收根节点的隐藏、显示通知，并延后至onMeasure里执行以防闪烁。</li>
+</ol>
+<p><img src="https://i.loli.net/2021/05/19/g6JFQhrXk7G8Kai.jpg" alt="31062-096d759aa5c0a064.jpg"></p>
+<h5 id="根节点"><a href="#根节点" class="headerlink" title="根节点"></a>根节点</h5><p>根节点容器处理了两个重要的事件,我们逐个分析</p>
+<ul>
+<li><p>onGlobalLayout<br>计算键盘高度、并赋值给面板容器；<br>计算键盘是否弹出状态</p>
+</li>
+<li><p>onMeasure<br>根据布局高度变化的差值，通知面板显示、隐藏</p>
+</li>
+</ul>
+<h6 id="为什么要在onGlobalLayout中处理真正的键盘变化并且进行键盘高度变化存储"><a href="#为什么要在onGlobalLayout中处理真正的键盘变化并且进行键盘高度变化存储" class="headerlink" title="为什么要在onGlobalLayout中处理真正的键盘变化并且进行键盘高度变化存储?"></a>为什么要在onGlobalLayout中处理真正的键盘变化并且进行键盘高度变化存储?</h6><p>因为效率：由于onMeasure与onLayout可能被多次调用，而onGlobalLayout是布局变化后只会被一次调用，并且我们需要处理所有键盘高度的变化(如搜狗输入法的动态调整键盘高度)因此在onGlobalLayout中计算键盘高度变化以及有效高度进行存储更为恰当。</p>
+<h6 id="为什么需要在根节点的onMeasure中判断，而不是其他地方判断是否是真正键盘引起变化的"><a href="#为什么需要在根节点的onMeasure中判断，而不是其他地方判断是否是真正键盘引起变化的" class="headerlink" title="为什么需要在根节点的onMeasure中判断，而不是其他地方判断是否是真正键盘引起变化的?"></a>为什么需要在根节点的onMeasure中判断，而不是其他地方判断是否是真正键盘引起变化的?</h6><p>对于我们可见的’最早’获知布局变化的，就是根节点的onMeasure，其次，必须要在面板容器的onMeasure之前获知，因此比较恰当的地方就是面板容器的父布局的onMeasure，还有就是，其实真正感知键盘变化我们可以非常确定的也只有对我们可见的最外层的布局。综合之，并且就封装而言就只能是根节点的onMeasure甚至更早。</p>
+<h5 id="面板节点"><a href="#面板节点" class="headerlink" title="面板节点"></a>面板节点</h5><p>面板节点重写了setVisibility()、onMeasure()函数，修改了显示、隐藏操作触发的时机；</p>
+<ul>
+<li><p>显示：键盘-&gt;面板<br>在键盘收起、面板展开的时候，拦截面板的setVisibility操作；<br>延迟到在根节点因键盘收起完毕导致onMeasure的事件里，此时再显示面板。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setVisibility</span><span class="params">(<span class="keyword">int</span> visibility)</span> </span>&#123;</span><br><span class="line"><span class="comment">//拦截用户显示操作，用于键盘收起-&gt;面板展开的流程visible的操作，在根布局的onMeasure里会通知</span></span><br><span class="line"><span class="keyword">if</span> (panelLayoutHandler.filterSetVisibility(visibility)) &#123;</span><br><span class="line">           <span class="keyword">return</span>;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">super</span>.setVisibility(visibility);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>隐藏：面板-&gt;键盘<br>根节点键盘弹出完毕后，会触发一次onMeasure，此时标记面板要隐藏<br>根节点分发onMeasure事件到面板节点，面板节点检测到隐藏标记，在此时Gone掉自己，同时把宽高设置为0，从而在当前帧不会被键盘顶起</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">int</span>[] processOnMeasure(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec) &#123;</span><br><span class="line">       <span class="keyword">if</span> (mIsHide) &#123;</span><br><span class="line">           panelLayout.setVisibility(View.GONE);</span><br><span class="line">           <span class="comment">/*</span></span><br><span class="line"><span class="comment">            * The current frame will be visible nil.</span></span><br><span class="line"><span class="comment">            */</span></span><br><span class="line">           widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(<span class="number">0</span>, View.MeasureSpec.EXACTLY);</span><br><span class="line">           heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(<span class="number">0</span>, View.MeasureSpec.EXACTLY);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">final</span> <span class="keyword">int</span>[] processedMeasureWHSpec = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">2</span>];</span><br><span class="line">       processedMeasureWHSpec[<span class="number">0</span>] = widthMeasureSpec;</span><br><span class="line">       processedMeasureWHSpec[<span class="number">1</span>] = heightMeasureSpec;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">return</span> processedMeasureWHSpec;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="小结："><a href="#小结：" class="headerlink" title="小结："></a>小结：</h5><p>我们基于 adjustResize在根布局可以监听到布局改变，从而控制面板达到防抖动效果。<br>但是在以下两种状态下，onMeasure检测不到高度的改变，我们需要另行处理</p>
+<ol>
+<li>全屏模式</li>
+<li>状态栏透明，但是根布局没有设置fitSystemWindow=true</li>
+</ol>
+<h5 id="onMeasure失效情况下的做法"><a href="#onMeasure失效情况下的做法" class="headerlink" title="onMeasure失效情况下的做法"></a>onMeasure失效情况下的做法</h5><p>引入根节点和面板节点<br>adjustPan我们知道，当输入框底部的空隙可以容纳键盘高度时，界面是不会滚动的。因此，JKeyboardPanelSwitch的做法是：</p>
+<h6 id="1-键盘弹出"><a href="#1-键盘弹出" class="headerlink" title="1.键盘弹出"></a>1.键盘弹出</h6><p>在输入框触摸时，把面板设置为invisible，把输入框顶高。此时键盘弹出的空间足够，界面就不会滚动</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">focusView.setOnTouchListener(<span class="keyword">new</span> View.OnTouchListener() &#123;</span><br><span class="line">              <span class="meta">@Override</span></span><br><span class="line">              <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onTouch</span><span class="params">(View v, MotionEvent event)</span> </span>&#123;</span><br><span class="line">                  <span class="keyword">if</span> (event.getAction() == MotionEvent.ACTION_UP) &#123;</span><br><span class="line">                      <span class="comment">/*</span></span><br><span class="line"><span class="comment">                       * Show the fake empty keyboard-same-height panel to fix the conflict when</span></span><br><span class="line"><span class="comment">                       * keyboard going to show.</span></span><br><span class="line"><span class="comment">                       * @see KPSwitchConflictUtil#showKeyboard(View, View)</span></span><br><span class="line"><span class="comment">                       */</span></span><br><span class="line">                      panelLayout.setVisibility(View.INVISIBLE);</span><br><span class="line">                  &#125;</span><br><span class="line">                  <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">              &#125;</span><br><span class="line">          &#125;);</span><br></pre></td></tr></table></figure>
+
+<h6 id="2-键盘隐藏"><a href="#2-键盘隐藏" class="headerlink" title="2. 键盘隐藏"></a>2. 键盘隐藏</h6><p>根布局的onGlobalLayout检测到键盘高度发生了变化，如果是收起，则通知面板去隐藏<br>KPSwitchFSPanelLayoutHandler#onKeyboardShowing</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.panelHeightTarget.onKeyboardShowing(isKeyboardShowing);</span><br></pre></td></tr></table></figure>
+
+<h6 id="3-面板弹出"><a href="#3-面板弹出" class="headerlink" title="3. 面板弹出"></a>3. 面板弹出</h6><p>面板从InVisible 切换到Visible，隐藏键盘</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">showPanel</span><span class="params">(<span class="keyword">final</span> View panelLayout)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">final</span> Activity activity = (Activity) panelLayout.getContext();</span><br><span class="line">        panelLayout.setVisibility(View.VISIBLE);</span><br><span class="line">        <span class="keyword">if</span> (activity.getCurrentFocus() != <span class="keyword">null</span>) &#123;</span><br><span class="line">            KeyboardUtil.hideKeyboard(activity.getCurrentFocus());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+<h5 id="额外注意"><a href="#额外注意" class="headerlink" title="额外注意"></a>额外注意</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"> <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onPause</span><span class="params">()</span> </span>&#123;</span><br><span class="line">     <span class="keyword">super</span>.onPause();</span><br><span class="line">     panelRoot.recordKeyboardStatus(getWindow());</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以看到接入的Activity的onPause函数里多了一段代码。注释掉后，发现Activity的切到后台，回来之后，界面又被顶上去了。我们回顾下原因</p>
+<ol>
+<li>activity切到后台，键盘隐藏，触发onGlobalLayout，隐藏panel</li>
+<li>切回activity，因为键盘拥有焦点，activity如果没有声明stateAlwaysHidden，键盘会自动弹出。</li>
+<li>此时因为panel是gone的，键盘容纳空间不够，因此会把界面顶上去。</li>
+<li>因此，我们在onPause的时候，需要标记键盘是否弹出</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">saveFocusView</span><span class="params">(<span class="keyword">final</span> View focusView)</span> </span>&#123;</span><br><span class="line">       recordedFocusView = focusView;</span><br><span class="line">       focusView.clearFocus();</span><br><span class="line">       panelLayout.setVisibility(View.GONE);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>在切回activity的时候触发onGlobalLayout，判断是否有保存的标记，如果有，手动执行一次面板invisble、键盘弹出操作</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">restoreFocusView</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        panelLayout.setVisibility(View.INVISIBLE);</span><br><span class="line">        KeyboardUtil.showKeyboard(recordedFocusView);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/04/11/sqlite3-stmt%E6%9C%BA%E5%88%B6/" rel="prev" title="sqlite3_stmt机制">
+      <i class="fa fa-chevron-left"></i> sqlite3_stmt机制
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E8%BD%AF%E9%94%AE%E7%9B%98%E5%B8%83%E5%B1%80%E8%A7%A3%E9%87%8A"><span class="nav-text">1. 软键盘布局解释</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E5%8E%9F%E5%9B%A0%E5%88%86%E6%9E%90"><span class="nav-text">2. 原因分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E8%A7%A3%E5%86%B3%E6%80%9D%E8%B7%AF"><span class="nav-text">3.解决思路</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1-%E9%81%BF%E5%85%8D%E9%87%8D%E5%A4%8DonLayout%E6%96%B9%E6%B3%95"><span class="nav-text">1.避免重复onLayout方法</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-%E9%94%AE%E7%9B%98%E3%80%81%E9%9D%A2%E6%9D%BF%E9%AB%98%E5%BA%A6%E4%B8%80%E8%87%B4"><span class="nav-text">2.键盘、面板高度一致</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-JKeyboardPanelSwitch%E6%A0%B8%E5%BF%83%E7%B1%BB%E5%88%86%E6%9E%90"><span class="nav-text">4. JKeyboardPanelSwitch核心类分析</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%A0%B9%E8%8A%82%E7%82%B9"><span class="nav-text">根节点</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%9C%A8onGlobalLayout%E4%B8%AD%E5%A4%84%E7%90%86%E7%9C%9F%E6%AD%A3%E7%9A%84%E9%94%AE%E7%9B%98%E5%8F%98%E5%8C%96%E5%B9%B6%E4%B8%94%E8%BF%9B%E8%A1%8C%E9%94%AE%E7%9B%98%E9%AB%98%E5%BA%A6%E5%8F%98%E5%8C%96%E5%AD%98%E5%82%A8"><span class="nav-text">为什么要在onGlobalLayout中处理真正的键盘变化并且进行键盘高度变化存储?</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%9C%A8%E6%A0%B9%E8%8A%82%E7%82%B9%E7%9A%84onMeasure%E4%B8%AD%E5%88%A4%E6%96%AD%EF%BC%8C%E8%80%8C%E4%B8%8D%E6%98%AF%E5%85%B6%E4%BB%96%E5%9C%B0%E6%96%B9%E5%88%A4%E6%96%AD%E6%98%AF%E5%90%A6%E6%98%AF%E7%9C%9F%E6%AD%A3%E9%94%AE%E7%9B%98%E5%BC%95%E8%B5%B7%E5%8F%98%E5%8C%96%E7%9A%84"><span class="nav-text">为什么需要在根节点的onMeasure中判断，而不是其他地方判断是否是真正键盘引起变化的?</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%9D%A2%E6%9D%BF%E8%8A%82%E7%82%B9"><span class="nav-text">面板节点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93%EF%BC%9A"><span class="nav-text">小结：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#onMeasure%E5%A4%B1%E6%95%88%E6%83%85%E5%86%B5%E4%B8%8B%E7%9A%84%E5%81%9A%E6%B3%95"><span class="nav-text">onMeasure失效情况下的做法</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1-%E9%94%AE%E7%9B%98%E5%BC%B9%E5%87%BA"><span class="nav-text">1.键盘弹出</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-%E9%94%AE%E7%9B%98%E9%9A%90%E8%97%8F"><span class="nav-text">2. 键盘隐藏</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#3-%E9%9D%A2%E6%9D%BF%E5%BC%B9%E5%87%BA"><span class="nav-text">3. 面板弹出</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%A2%9D%E5%A4%96%E6%B3%A8%E6%84%8F"><span class="nav-text">额外注意</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Loiszad"
+      src="/images/IMG_0167.JPG">
+  <p class="site-author-name" itemprop="name">Loiszad</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2013 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Loiszad</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
