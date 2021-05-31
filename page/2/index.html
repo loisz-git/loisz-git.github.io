@@ -159,6 +159,72 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/26/Handler-Pause-And-Resume/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/IMG_0167.JPG">
+      <meta itemprop="name" content="Loiszad">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="郁闷的不行">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2016/12/26/Handler-Pause-And-Resume/" class="post-title-link" itemprop="url">Handler Pause And Resume</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-12-26 11:30:38" itemprop="dateCreated datePublished" datetime="2016-12-26T11:30:38+08:00">2016-12-26</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><strong>在某些特定的情况下，我们可能需要暂停处理MessageQueue中的Message，然后恢复。可以通过一下方法来解决：</strong></p>
+<p><strong>自定义Handler，复写handleMessage方法，在方法中添加标记位来控制暂停和开始：</strong></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2016/12/26/Handler-Pause-And-Resume/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/12/29/Git%E7%9A%84%E4%BD%BF%E7%94%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -756,71 +822,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2014/05/30/C4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/IMG_0167.JPG">
-      <meta itemprop="name" content="Loiszad">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="郁闷的不行">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2014/05/30/C4/" class="post-title-link" itemprop="url">C4</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2014-05-30 09:41:05" itemprop="dateCreated datePublished" datetime="2014-05-30T09:41:05+08:00">2014-05-30</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="1-char-p-”Hello-World”和char-p-”Hello-World”之间的区别"><a href="#1-char-p-”Hello-World”和char-p-”Hello-World”之间的区别" class="headerlink" title="1.char *p=”Hello World”和char p[]=”Hello World”之间的区别"></a>1.char *p=”Hello World”和char p[]=”Hello World”之间的区别</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">从其声明的对象来说：</span><br><span class="line"><span class="keyword">char</span> p[] = <span class="string">&quot;hello world!&quot;</span>;     <span class="comment">//用来声明一个数组p，数组大小为12字节。</span></span><br><span class="line"><span class="keyword">char</span> *p = <span class="string">&quot;hello world!&quot;</span>;      <span class="comment">//用来声明一个指针p，指向“hello world!”字符串起始位置。</span></span><br><span class="line">从存储位置来说：</span><br><span class="line"><span class="keyword">char</span> p[] = <span class="string">&quot;hello world!&quot;</span>;    <span class="comment">//p数组作为局部变量被存储在栈区；</span></span><br><span class="line"><span class="keyword">char</span> *p = <span class="string">&quot;hello world!&quot;</span>;     <span class="comment">//在这个声明中，&quot;hello world!&quot;被存储在静态数据区 ，而且是全局的，</span></span><br><span class="line">                              <span class="comment">//p仅仅就是个指针，指向这个区域。 不信的话可以试试下边的代码，看是不是同一个地址：</span></span><br><span class="line"><span class="keyword">char</span> *p1 = <span class="string">&quot;hello world!&quot;</span>;</span><br><span class="line"><span class="keyword">char</span> *p2 = <span class="string">&quot;hello world!&quot;</span>;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;p1:%x/np2:%x/n&quot;</span>,p1,p2);</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2014/05/30/C4/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -892,7 +893,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-count">32</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

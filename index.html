@@ -159,6 +159,80 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/05/31/Java%E4%B8%AD%E7%9A%84%E4%BB%A3%E7%90%86Proxy/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/IMG_0167.JPG">
+      <meta itemprop="name" content="Loiszad">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="郁闷的不行">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/31/Java%E4%B8%AD%E7%9A%84%E4%BB%A3%E7%90%86Proxy/" class="post-title-link" itemprop="url">Java中的代理Proxy</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-05-31 10:02:55" itemprop="dateCreated datePublished" datetime="2021-05-31T10:02:55+08:00">2021-05-31</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="1-代理模式"><a href="#1-代理模式" class="headerlink" title="1. 代理模式"></a>1. 代理模式</h4><p><img src="https://i.loli.net/2021/05/31/oDT6i2urAWc3CnP.jpg" alt="7980749234585f364651f522f7e45c73.jpg"></p>
+<p>这是常见代理模式常见的 UML 示意图。</p>
+<p>需要注意的有下面几点：</p>
+<ol>
+<li>用户只关心接口功能，而不在乎谁提供了功能。上图中接口是 Subject。</li>
+<li>接口真正实现者是上图的 RealSubject，但是它不与用户直接接触，而是通过代理。</li>
+<li>代理就是上图中的 Proxy，由于它实现了 Subject 接口，所以它能够直接与用户接触。</li>
+<li>用户调用 Proxy 的时候，Proxy 内部调用了 RealSubject。所以，Proxy 是中介者，它可以增强 RealSubject 操作。</li>
+<li>代理又可以分为静态代理和动态代理两种。我们先来看下静态代理。</li>
+</ol>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/05/31/Java%E4%B8%AD%E7%9A%84%E4%BB%A3%E7%90%86Proxy/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/05/19/JKeyboardPanelSwitch%E9%94%AE%E7%9B%98%E9%9D%A2%E6%9D%BF%E9%98%B2%E6%8A%96%E6%96%B9%E6%A1%88/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -744,72 +818,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/26/Handler-Pause-And-Resume/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/IMG_0167.JPG">
-      <meta itemprop="name" content="Loiszad">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="郁闷的不行">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2016/12/26/Handler-Pause-And-Resume/" class="post-title-link" itemprop="url">Handler Pause And Resume</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2016-12-26 11:30:38" itemprop="dateCreated datePublished" datetime="2016-12-26T11:30:38+08:00">2016-12-26</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><strong>在某些特定的情况下，我们可能需要暂停处理MessageQueue中的Message，然后恢复。可以通过一下方法来解决：</strong></p>
-<p><strong>自定义Handler，复写handleMessage方法，在方法中添加标记位来控制暂停和开始：</strong></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2016/12/26/Handler-Pause-And-Resume/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -881,7 +889,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-count">32</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
